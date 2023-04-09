@@ -1,3 +1,15 @@
+export interface Input {
+  token: string
+  useComplexityLabels: boolean
+  useSizeLabels: boolean
+  useBodyMetadataLabels: boolean
+  useTitleMetadataLabels: boolean
+  complexityLabels: string
+  sizeLabels: string
+  bodyMetadataLabels: string
+  titleMetadataLabels: string
+}
+
 export interface Label {
   name: string
   description: string
@@ -7,14 +19,6 @@ export interface Label {
 export interface LogicalLabel extends Label {
   type: LabelType
   condition: string
-}
-
-export interface Input {
-  token: string
-  useSizeLabels: boolean
-  useBodyMetadataLabels: boolean
-  sizeLabels: string
-  bodyMetadataLabels: string
 }
 
 export enum LabelType {

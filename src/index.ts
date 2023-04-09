@@ -7,12 +7,39 @@ import {Input, Label} from './types'
 
 const input: Input = {
   token: getInput('token', {required: true}),
+  useComplexityLabels: getBooleanInput('useComplexityLabels', {
+    required: false
+  }),
   useSizeLabels: getBooleanInput('useSizeLabels', {required: false}),
   useBodyMetadataLabels: getBooleanInput('useBodyMetadataLabels', {
     required: false
   }),
+  useTitleMetadataLabels: getBooleanInput('useBodyMetadataLabels', {
+    required: false
+  }),
+  complexityLabels: getInput('complexityLabels', {required: false}),
   sizeLabels: getInput('sizeLabels', {required: false}),
-  bodyMetadataLabels: getInput('bodyMetadataLabels', {required: false})
+  bodyMetadataLabels: getInput('bodyMetadataLabels', {required: false}),
+  titleMetadataLabels: getInput('titleMetadataLabels', {required: false})
+}
+
+async function handleSizeLabels(
+  prNumber: number,
+  changeSize: number,
+  labelsString: string
+) {
+  await sizeLabelHandlers.createOrUpdateLabels(input.token, labelsString)
+  await pullRequestHandler.cleanLabels(
+    input.token,
+    prNumber,
+    sizeLabelHandlers.parseLabelsFromFormattedString(labelsString)
+  )
+  const complexityLabel: Label | undefined =
+    sizeLabelHandlers.getLabelForChangeSize(changeSize, labelsString)
+  if (complexityLabel === undefined) {
+    throw new Error(`Unexpected error while retrieving label for pull request.`)
+  }
+  await pullRequestHandler.addLabel(input.token, prNumber, complexityLabel)
 }
 
 async function run(): Promise<void> {
@@ -21,44 +48,26 @@ async function run(): Promise<void> {
       throw new Error(`This Action is only supported on 'pull_request' events.`)
     }
     const prNumber: number = context.payload.pull_request.number
-    const client = new GitHub(getOctokitOptions(input.token))
-    const {title, body, additions, deletions} = (
-      await client.rest.pulls.get({...context.repo, pull_number: prNumber})
+    const client = new GitHub(getOctokitOptions(input.token)).rest
+    const {title, body, additions, deletions, changed_files} = (
+      await client.pulls.get({...context.repo, pull_number: prNumber})
     ).data
-    if (input.useSizeLabels) {
-      await sizeLabelHandlers.createOrUpdateLabels(
-        input.token,
-        input.sizeLabels
-      )
-      const linesChanged = additions + deletions
-      info(
-        `additions: ${additions}, deletions: ${deletions}, linesChanged: ${linesChanged}`
-      )
-      await pullRequestHandler.cleanLabels(
-        input.token,
+    if (input.useComplexityLabels) {
+      await handleSizeLabels(
         prNumber,
-        sizeLabelHandlers.parseLabelsFromFormattedString(input.sizeLabels)
+        additions + deletions,
+        input.complexityLabels
       )
-      const sizeLabel: Label | undefined =
-        sizeLabelHandlers.getLabelForLinesChanged(
-          linesChanged,
-          input.sizeLabels
-        )
-      if (sizeLabel === undefined) {
-        throw new Error(
-          `Unexpected error while retrieving label for pull request.`
-        )
-      }
-      await pullRequestHandler.addLabel(input.token, prNumber, sizeLabel)
+    }
+    if (input.useSizeLabels) {
+      await handleSizeLabels(prNumber, changed_files, input.sizeLabels)
     }
     if (input.useBodyMetadataLabels) {
-      await sizeLabelHandlers.createOrUpdateLabels(
-        input.token,
-        input.bodyMetadataLabels
-      )
+      info(`${body}`)
     }
-    info(`PR Title: ${title}`)
-    info(`PR Body: ${body}`)
+    if (input.useTitleMetadataLabels) {
+      info(`${title}`)
+    }
   } catch (error: any) {
     setFailed(error.message)
   }

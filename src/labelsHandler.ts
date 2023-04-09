@@ -84,8 +84,8 @@ const parseLogicalLabelsFromFormattedString = (
   return formattedString.split(',').map(v => parseLogicalLabel(v, labelType))
 }
 
-const getLabelForLinesChanged = (
-  linesChanged: number,
+const getLabelForChangeSize = (
+  changeSize: number,
   sizeLabels: string
 ): Label | undefined => {
   const possibleLabels: LogicalLabel[] = parseLogicalLabelsFromFormattedString(
@@ -95,7 +95,7 @@ const getLabelForLinesChanged = (
   possibleLabels.sort((a, b) => parseInt(a.condition) - parseInt(b.condition))
   for (const label of possibleLabels) {
     info(`label: ${label.name}, condition: ${label.condition}`)
-    if (parseInt(label.condition) > linesChanged) {
+    if (parseInt(label.condition) > changeSize) {
       return label
     }
   }
@@ -105,5 +105,5 @@ export const sizeLabelHandlers = {
   parseLabelsFromFormattedString,
   getLabelsForRepo,
   createOrUpdateLabels,
-  getLabelForLinesChanged
+  getLabelForChangeSize
 }
