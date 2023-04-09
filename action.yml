@@ -12,7 +12,7 @@ inputs:
   complexityLabels:
     required: false
     description: 'A comma separated list of strings to represent the labels.'
-    default: 'simple|F2C5E0=20,normal|EC8FD0=200,complex|D43790=1000,headache|AE388B='
+    default: 'simple|F2C5E0=40,normal|EC8FD0=200,complex|D43790=1000,headache|AE388B='
   useSizeLabels:
     required: false
     description: 'Whether or not to label a pull request based on amount of files changed.'
@@ -20,7 +20,7 @@ inputs:
   sizeLabels:
     required: false
     description: 'A comma separated list of strings to represent the labels.'
-    default: 'small|FFFF8A=5,medium|FEDE00=20,large|FD7F20=50,titanic|FC2E20='
+    default: 'small|FFFF8A=10,medium|FEDE00=25,large|FD7F20=50,titanic|FC2E20='
   useBodyMetadataLabels:
     required: false
     description: 'Whether or not to label a pull request based on metadata extracted from regular expressions scanned on the pull request body.'
