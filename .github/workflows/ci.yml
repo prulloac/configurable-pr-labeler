@@ -1,0 +1,17 @@
+name: "JS check"
+on:
+  push:
+    paths:
+      - "**.js"
+      - "**.ts"
+      - "**/package.json"
+jobs:
+  test-js:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: install npm
+        uses: actions/setup-node@v3
+      - run: npm install
+      - run: npm test
