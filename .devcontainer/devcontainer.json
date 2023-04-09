@@ -31,17 +31,27 @@
 
 	"containerEnv": {
 		"GIT_DEFAULT_BRANCH": "${localEnv:GIT_DEFAULT_BRANCH:main}",
-		"GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}"
+		"GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+		"GIT_USER_EMAIL": "${localEnv:GIT_USER_EMAIL}",
+		"GIT_USER_NAME": "${localEnv:GIT_USER_NAME}"
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "sh ./.devcontainer/warmup.sh"
+	"postCreateCommand": "bash ./.devcontainer/warmup.sh",
+	"postStartCommand": "zsh",
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"terminal.integrated.defaultProfile.windows": "zsh"
+			}
+		}
+	}
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
