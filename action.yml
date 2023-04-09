@@ -1,0 +1,26 @@
+name: 'PR Labeler'
+description: 'Labels a pull request based on amount of lines changed and pull request body metadata.'
+author: 'prulloac'
+inputs:
+  token:
+    required: true
+    description: 'The GitHub token to use for making API requests.'
+  useSizeLabels:
+    required: false
+    description: 'Whether or not to label a pull request based on amount of lines changed.'
+    default: true
+  sizeLabels:
+    required: false
+    description: 'A comma separated list of strings to represent the labels used for thresholds.'
+    default: 'small|FFFF8A=20,medium|FEDE00=50,large|FD7F20=200,titanic|FC2E20='
+  useBodyMetadataLabels:
+    required: false
+    description: 'Whether or not to label a pull request based on metadata extracted from regular expressions scanned on the pull request body.'
+    default: false
+  bodyMetadataLabels:
+    required: false
+    description: 'A comma separated list of key-value pairs where the key is the label and the value is the RegEx that should be looked up.'
+    default: 'poc|FFFFFF=/(proof of concept|POC)/gi'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

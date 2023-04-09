@@ -1,2 +1,8 @@
-**/node_modules
-**/coverage
+# node modules
+node_modules
+
+# jest coverage output
+coverage
+
+# ts output dir
+lib
