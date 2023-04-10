@@ -8,6 +8,7 @@
         "project": "./tsconfig.json"
     },
     "rules": {
+        "camelcase": "off",
         "@typescript-eslint/no-floating-promises": "off"
     },
     "env": {

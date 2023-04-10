@@ -1,66 +1,35 @@
-import {info, getInput, setFailed, getBooleanInput} from '@actions/core'
+import {info, setFailed} from '@actions/core'
 import {context} from '@actions/github'
-import {GitHub, getOctokitOptions} from '@actions/github/lib/utils'
-import {sizeLabelHandlers} from './labelsHandler'
-import {pullRequestHandler} from './pullRequestHandler'
-import {Input, Label} from './types'
+import {createOrUpdateLabels} from './labels/handler'
+import {getLabelForChangeSize, parseLabels} from './labels/formatter'
+import {pullRequestHandler} from './pullRequest/handler'
+import {Label} from './types'
+import {input, client, prNumber} from './proxy'
 
-const input: Input = {
-  token: getInput('token', {required: true}),
-  useComplexityLabels: getBooleanInput('useComplexityLabels', {
-    required: false
-  }),
-  useSizeLabels: getBooleanInput('useSizeLabels', {required: false}),
-  useBodyMetadataLabels: getBooleanInput('useBodyMetadataLabels', {
-    required: false
-  }),
-  useTitleMetadataLabels: getBooleanInput('useBodyMetadataLabels', {
-    required: false
-  }),
-  complexityLabels: getInput('complexityLabels', {required: false}),
-  sizeLabels: getInput('sizeLabels', {required: false}),
-  bodyMetadataLabels: getInput('bodyMetadataLabels', {required: false}),
-  titleMetadataLabels: getInput('titleMetadataLabels', {required: false})
-}
-
-async function handleSizeLabels(
-  prNumber: number,
-  changeSize: number,
-  labelsString: string
-) {
-  await sizeLabelHandlers.createOrUpdateLabels(input.token, labelsString)
-  await pullRequestHandler.cleanLabels(
-    input.token,
-    prNumber,
-    sizeLabelHandlers.parseLabelsFromFormattedString(labelsString)
-  )
-  const complexityLabel: Label | undefined =
-    sizeLabelHandlers.getLabelForChangeSize(changeSize, labelsString)
-  if (complexityLabel === undefined) {
-    throw new Error(`Unexpected error while retrieving label for pull request.`)
+async function handleSizeLabels(changeSize: number, labelsString: string) {
+  await createOrUpdateLabels(labelsString)
+  const complexityLabel: Label = getLabelForChangeSize(changeSize, labelsString)
+  if (!pullRequestHandler.labelCurrentlyInPullRequest(complexityLabel)) {
+    const possibleLabels: Label[] = parseLabels(labelsString)
+    await pullRequestHandler.cleanLabels(possibleLabels)
+    await pullRequestHandler.addLabel(complexityLabel)
   }
-  await pullRequestHandler.addLabel(input.token, prNumber, complexityLabel)
 }
 
 async function run(): Promise<void> {
   try {
-    if (context.payload.pull_request == null) {
+    if (prNumber === 0) {
       throw new Error(`This Action is only supported on 'pull_request' events.`)
     }
-    const prNumber: number = context.payload.pull_request.number
-    const client = new GitHub(getOctokitOptions(input.token)).rest
+    pullRequestHandler.loadCurrentLabels()
     const {title, body, additions, deletions, changed_files} = (
-      await client.pulls.get({...context.repo, pull_number: prNumber})
+      await client.rest.pulls.get({...context.repo, pull_number: prNumber})
     ).data
     if (input.useComplexityLabels) {
-      await handleSizeLabels(
-        prNumber,
-        additions + deletions,
-        input.complexityLabels
-      )
+      await handleSizeLabels(additions + deletions, input.complexityLabels)
     }
     if (input.useSizeLabels) {
-      await handleSizeLabels(prNumber, changed_files, input.sizeLabels)
+      await handleSizeLabels(changed_files, input.sizeLabels)
     }
     if (input.useBodyMetadataLabels) {
       info(`${body}`)

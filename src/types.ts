@@ -16,12 +16,12 @@ export interface Label {
   color: string
 }
 
-export interface LogicalLabel extends Label {
-  type: LabelType
-  condition: string
-}
-
 export enum LabelType {
   SIZE,
   REGEX
+}
+
+export interface LogicalLabel extends Label {
+  type: LabelType
+  condition: string
 }
