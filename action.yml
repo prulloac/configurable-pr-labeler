@@ -20,7 +20,7 @@ inputs:
   sizeLabels:
     required: false
     description: 'A comma separated list of strings to represent the labels.'
-    default: 'small :file_folder:|FFFF8A=10,medium :file_folder:|FEDE00=25,large :file_folder:|FD7F20=50,titanic :file_folder:|FC2E20='
+    default: 'small :file_folder: |FFFF8A=10,medium :file_folder: |FEDE00=25,large :file_folder: |FD7F20=50,titanic :file_folder: |FC2E20='
   useBodyMetadataLabels:
     required: false
     description: 'Whether or not to label a pull request based on metadata extracted from regular expressions scanned on the pull request body.'
