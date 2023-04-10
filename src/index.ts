@@ -7,7 +7,6 @@ import {Label} from './types'
 import {input, client, prNumber} from './proxy'
 
 async function handleSizeLabels(changeSize: number, labelsString: string) {
-  await createOrUpdateLabels(labelsString)
   const complexityLabel: Label = getLabelForChangeSize(changeSize, labelsString)
   if (!pullRequestHandler.labelCurrentlyInPullRequest(complexityLabel)) {
     const possibleLabels: Label[] = parseLabels(labelsString)
@@ -25,6 +24,8 @@ async function run(): Promise<void> {
     const {title, body, additions, deletions, changed_files} = (
       await client.rest.pulls.get({...context.repo, pull_number: prNumber})
     ).data
+    await createOrUpdateLabels(input.complexityLabels)
+    await createOrUpdateLabels(input.sizeLabels)
     if (input.useComplexityLabels) {
       await handleSizeLabels(additions + deletions, input.complexityLabels)
     }
