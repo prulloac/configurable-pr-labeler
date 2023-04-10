@@ -25,7 +25,6 @@ async function run(): Promise<void> {
       await client.rest.pulls.get({...context.repo, pull_number: prNumber})
     ).data
     await createOrUpdateLabels(input.complexityLabels)
-    await createOrUpdateLabels(input.sizeLabels)
     if (input.useComplexityLabels) {
       await handleSizeLabels(additions + deletions, input.complexityLabels)
     }
