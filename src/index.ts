@@ -1,7 +1,7 @@
 import {info, setFailed} from '@actions/core'
 import {context} from '@actions/github'
 import {createOrUpdateLabels} from './labels/handler'
-import {getLabelForChangeSize, parseLabels} from './labels/formatter'
+import {getLabelForChangeSize, parseLabels} from './labels/utils'
 import {pullRequestHandler} from './pullRequest/handler'
 import {Label} from './types'
 import {input, client, prNumber} from './proxy'

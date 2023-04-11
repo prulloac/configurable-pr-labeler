@@ -2,7 +2,7 @@ import {info} from '@actions/core'
 import {context} from '@actions/github'
 import {Label} from '../types'
 import {client} from '../proxy'
-import {parseLabels} from './formatter'
+import {isLabelPresent, parseLabels} from './utils'
 
 const logLabel = (label: Label): void =>
   info(`label: ${label.name}, color: ${label.color}`)
@@ -28,11 +28,7 @@ async function createLabelIfNotPresent(
   label: Label,
   currentLabels: Label[]
 ): Promise<Label | undefined> {
-  if (
-    !currentLabels.find(
-      query => query.name.toLocaleLowerCase() === label.name.toLocaleLowerCase()
-    )
-  ) {
+  if (!isLabelPresent(label, currentLabels)) {
     const {data} = await client.rest.issues.createLabel({
       ...context.repo,
       ...label

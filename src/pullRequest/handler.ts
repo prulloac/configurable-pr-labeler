@@ -1,14 +1,12 @@
 import {context} from '@actions/github'
 import {Label} from '../types'
 import {client, prNumber} from '../proxy'
+import {isLabelPresent} from '../labels/utils'
 
 let currentLabels: {name: string}[] = []
 
-const labelCurrentlyInPullRequest = (label: {name: string}): boolean => {
-  const sameName = (labelA: {name: string}, labelB: {name: string}): boolean =>
-    labelA.name.toLocaleLowerCase() === labelB.name.toLocaleLowerCase()
-  return !!currentLabels.find(remoteLabel => sameName(remoteLabel, label))
-}
+const labelCurrentlyInPullRequest = (label: {name: string}): boolean =>
+  isLabelPresent(label, currentLabels)
 
 async function cleanLabels(labelsToClean: Label[]): Promise<void> {
   for (const label of labelsToClean) {
