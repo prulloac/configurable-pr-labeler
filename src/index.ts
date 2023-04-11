@@ -20,11 +20,12 @@ async function run(): Promise<void> {
     if (prNumber === 0) {
       throw new Error(`This Action is only supported on 'pull_request' events.`)
     }
-    pullRequestHandler.loadCurrentLabels()
+    await pullRequestHandler.loadCurrentLabels()
     const {title, body, additions, deletions, changed_files} = (
       await client.rest.pulls.get({...context.repo, pull_number: prNumber})
     ).data
     await createOrUpdateLabels(input.complexityLabels)
+    await createOrUpdateLabels(input.sizeLabels)
     if (input.useComplexityLabels) {
       await handleSizeLabels(additions + deletions, input.complexityLabels)
     }
