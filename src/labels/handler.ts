@@ -31,9 +31,11 @@ async function createLabelIfNotPresent(
   if (!isLabelPresent(label, currentLabels)) {
     const {data} = await client.rest.issues.createLabel({
       ...context.repo,
-      ...label
+      name: label.name,
+      color: label.color,
+      description: label.description || undefined
     })
-    return data as Label
+    return new Label(data.name, data.color, data.description)
   }
   return undefined
 }

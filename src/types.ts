@@ -1,3 +1,5 @@
+import {info} from '@actions/core'
+
 export interface Input {
   token: string
   useComplexityLabels: boolean
@@ -10,10 +12,20 @@ export interface Input {
   titleMetadataLabels: string
 }
 
-export interface Label {
+export class Label {
   name: string
-  description: string
+  description: string | null
   color: string
+
+  constructor(name: string, color: string, description: string | null) {
+    this.name = name.trim()
+    this.color = color.trim()
+    this.description = description?.trim() || null
+  }
+
+  log() {
+    info(`label: ${this.name}, color: ${this.color}`)
+  }
 }
 
 export enum LabelType {
@@ -21,7 +33,25 @@ export enum LabelType {
   REGEX
 }
 
-export interface LogicalLabel extends Label {
-  type: LabelType
+export class LogicalLabel extends Label {
+  type: LabelType | undefined
   condition: string
+
+  constructor(
+    name: string,
+    color: string,
+    description: string | null,
+    condition: string,
+    type?: LabelType
+  ) {
+    super(name, color, description)
+    this.type = type
+    this.condition = condition
+  }
+
+  log() {
+    info(
+      `label: ${this.name}, color: ${this.color}, condition: ${this.condition}`
+    )
+  }
 }
