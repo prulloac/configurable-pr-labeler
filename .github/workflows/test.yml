@@ -1,6 +1,8 @@
 name: 'build-test'
 on: # rebuild any PRs and main branch changes
   pull_request:
+    types:
+      [opened, reopened, edited]
     branches:
       - main
       - 'development'
@@ -22,3 +24,4 @@ jobs:
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           useTitleMetadataLabels: true
+          useBodyMetadataLabels: true

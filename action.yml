@@ -28,7 +28,7 @@ inputs:
   bodyMetadataLabels:
     required: false
     description: 'A comma separated list of key-value pairs where the key is the label and the value is the RegEx that should be looked up.'
-    default: 'poc|FFFFFF=/(proof of concept|POC)/gi'
+    default: 'important :warning: |FFFFFF=/#important/gmi, wip :construction: |FFFFFF=/#(wip|work in progress|work_in_progress|work-in-progress)/gmi'
   useTitleMetadataLabels:
     required: false
     description: 'Whether or not to label a pull request based on metadata extracted from regular expressions scanned on the pull request title.'
