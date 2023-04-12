@@ -29,9 +29,9 @@ async function handleRegexLabels(
     possibleLabels
   )
   if (matchingLabels.length > 0) {
-    await pullRequestHandler.cleanLabels(possibleLabels)
     for (const label of matchingLabels) {
-      pullRequestHandler.addLabel(label)
+      await pullRequestHandler.cleanLabels(possibleLabels)
+      await pullRequestHandler.addLabel(label)
     }
   }
 }
@@ -56,7 +56,7 @@ async function run(): Promise<void> {
       await handleSizeLabels(changed_files, input.sizeLabels)
     }
     if (input.useBodyMetadataLabels && (body?.length || 0) > 1) {
-      await handleRegexLabels(`${body}`, input.titleMetadataLabels)
+      await handleRegexLabels(`${body}`, input.bodyMetadataLabels)
     }
     if (input.useTitleMetadataLabels && (title?.length || 0) > 1) {
       await handleRegexLabels(title, input.titleMetadataLabels)
