@@ -36,7 +36,7 @@ inputs:
   titleMetadataLabels:
     required: false
     description: 'A comma separated list of key-value pairs where the key is the label and the value is the RegEx that should be looked up.'
-    default: 'feature :rocket: |76B947=/^feat(ure)?\/[a-z0-9\-_]+$/i,fix :wrench: |F8D210=/^fix\/[a-z0-9\-_]+$/i,hotfix :fire_engine: |F51720=/^hotfix\/[a-z0-9\-_]+$/i,poc :thought_balloon: |2FF3E0=/^(poc|test)\/[a-z0-9\-_]+$/i'
+    default: 'feature :rocket: |76B947=/^feat(ure)?\/[a-z0-9\-_ &#$@!?%]+$/i,fix :wrench: |F8D210=/^fix\/[a-z0-9\-_ &#$@!?%]+$/i,hotfix :fire_engine: |F51720=/^hotfix\/[a-z0-9\-_ &#$@!?%]+$/i,poc :thought_balloon: |2FF3E0=/^(poc|test)\/[a-z0-9\-_ &#$@!?%]+$/i'
 runs:
   using: 'node16'
   main: 'dist/index.js'
