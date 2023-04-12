@@ -62,7 +62,6 @@ export const getLabelForChangeSize = (
   )
   possibleLabels.sort((a, b) => parseInt(a.condition) - parseInt(b.condition))
   for (const label of possibleLabels) {
-    info(`label: ${label.name}, condition: ${label.condition}`)
     if (parseInt(label.condition) > changeSize) {
       return label
     }
@@ -90,13 +89,24 @@ export const getPossibleRegularExpressionLabels = (
   return logicalLabels
 }
 
+const logLabel = (label: Label): void =>
+  info(`label: ${label.name}, color: ${label.color}`)
+const logLabels = (labels: Label[]): void => {
+  for (const label of labels) {
+    logLabel(label)
+  }
+}
+
 export const getMatchingRegularExpressionLabels = (
   scanTarget: string,
   possibleLabels: LogicalLabel[]
 ): Label[] => {
+  logLabels(possibleLabels)
   const matchingLabels: Label[] = []
   for (const label of possibleLabels) {
     if (labelRegexMatch(scanTarget, label)) {
+      info('match found!')
+      logLabel(label)
       matchingLabels.push(label)
     }
   }
