@@ -1,17 +1,38 @@
-import {info, setFailed} from '@actions/core'
+import {setFailed} from '@actions/core'
 import {context} from '@actions/github'
 import {createOrUpdateLabels} from './labels/handler'
-import {getLabelForChangeSize, parseLabels} from './labels/utils'
+import * as labelUtils from './labels/utils'
 import {pullRequestHandler} from './pullRequest/handler'
-import {Label} from './types'
+import {Label, LogicalLabel} from './types'
 import {input, client, prNumber} from './proxy'
 
 async function handleSizeLabels(changeSize: number, labelsString: string) {
-  const complexityLabel: Label = getLabelForChangeSize(changeSize, labelsString)
+  const complexityLabel: Label = labelUtils.getLabelForChangeSize(
+    changeSize,
+    labelsString
+  )
   if (!pullRequestHandler.labelCurrentlyInPullRequest(complexityLabel)) {
-    const possibleLabels: Label[] = parseLabels(labelsString)
+    const possibleLabels: Label[] = labelUtils.parseLabels(labelsString)
     await pullRequestHandler.cleanLabels(possibleLabels)
     await pullRequestHandler.addLabel(complexityLabel)
+  }
+}
+
+async function handleRegexLabels(
+  scanTarget: string,
+  regularExpressionLabels: string
+) {
+  const possibleLabels: LogicalLabel[] =
+    labelUtils.getPossibleRegularExpressionLabels(regularExpressionLabels)
+  const matchingLabels: Label[] = labelUtils.getMatchingRegularExpressionLabels(
+    scanTarget,
+    possibleLabels
+  )
+  if (matchingLabels.length > 0) {
+    for (const label of matchingLabels) {
+      await pullRequestHandler.cleanLabels(possibleLabels)
+      await pullRequestHandler.addLabel(label)
+    }
   }
 }
 
@@ -26,17 +47,19 @@ async function run(): Promise<void> {
     ).data
     await createOrUpdateLabels(input.complexityLabels)
     await createOrUpdateLabels(input.sizeLabels)
+    await createOrUpdateLabels(input.titleMetadataLabels)
+    await createOrUpdateLabels(input.bodyMetadataLabels)
     if (input.useComplexityLabels) {
       await handleSizeLabels(additions + deletions, input.complexityLabels)
     }
     if (input.useSizeLabels) {
       await handleSizeLabels(changed_files, input.sizeLabels)
     }
-    if (input.useBodyMetadataLabels) {
-      info(`${body}`)
+    if (input.useBodyMetadataLabels && (body?.length || 0) > 1) {
+      await handleRegexLabels(`${body}`, input.bodyMetadataLabels)
     }
-    if (input.useTitleMetadataLabels) {
-      info(`${title}`)
+    if (input.useTitleMetadataLabels && (title?.length || 0) > 1) {
+      await handleRegexLabels(title, input.titleMetadataLabels)
     }
   } catch (error: any) {
     setFailed(error.message)

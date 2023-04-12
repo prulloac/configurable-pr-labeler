@@ -40,6 +40,19 @@ const parseLogicalLabelsFromFormattedString = (
   return formattedString.split(',').map(v => parseLogicalLabel(v, labelType))
 }
 
+const labelRegexMatch = (scanTarget: string, label: LogicalLabel): boolean => {
+  const condition: string =
+    new RegExp(/(?<=\/).*(?=\/)/).exec(label.condition)?.[0] || ''
+  const flags: string | undefined = new RegExp(/\/.{0,3}$/)
+    .exec(label.condition)?.[0]
+    .replace('/', '')
+  info(`testing with condition: ${condition} and flags: ${flags}`)
+  const regExpFromLabel: RegExp = flags
+    ? new RegExp(condition, flags)
+    : new RegExp(condition)
+  return regExpFromLabel.test(scanTarget)
+}
+
 export const getLabelForChangeSize = (
   changeSize: number,
   sizeLabels: string
@@ -50,7 +63,6 @@ export const getLabelForChangeSize = (
   )
   possibleLabels.sort((a, b) => parseInt(a.condition) - parseInt(b.condition))
   for (const label of possibleLabels) {
-    info(`label: ${label.name}, condition: ${label.condition}`)
     if (parseInt(label.condition) > changeSize) {
       return label
     }
@@ -66,4 +78,40 @@ export const isLabelPresent = (
     labelA.name.trim().toLocaleLowerCase() ===
     labelB.name.trim().toLocaleLowerCase()
   return !!labels.find(labelInArray => sameName(labelInArray, label))
+}
+
+export const getPossibleRegularExpressionLabels = (
+  regularExpressionLabels: string
+): LogicalLabel[] => {
+  const logicalLabels: LogicalLabel[] = parseLogicalLabelsFromFormattedString(
+    regularExpressionLabels,
+    LabelType.REGEX
+  )
+  return logicalLabels
+}
+
+const logLabel = (label: LogicalLabel): void =>
+  info(
+    `label: ${label.name}, color: ${label.color}, condition: ${label.condition}`
+  )
+const logLabels = (labels: LogicalLabel[]): void => {
+  for (const label of labels) {
+    logLabel(label)
+  }
+}
+
+export const getMatchingRegularExpressionLabels = (
+  scanTarget: string,
+  possibleLabels: LogicalLabel[]
+): Label[] => {
+  logLabels(possibleLabels)
+  const matchingLabels: Label[] = []
+  for (const label of possibleLabels) {
+    if (labelRegexMatch(scanTarget, label)) {
+      info('match found!')
+      logLabel(label)
+      matchingLabels.push(label)
+    }
+  }
+  return matchingLabels
 }

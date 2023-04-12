@@ -1,16 +1,7 @@
-import {info} from '@actions/core'
 import {context} from '@actions/github'
 import {Label} from '../types'
 import {client} from '../proxy'
 import {isLabelPresent, parseLabels} from './utils'
-
-const logLabel = (label: Label): void =>
-  info(`label: ${label.name}, color: ${label.color}`)
-const logLabels = (labels: Label[]): void => {
-  for (const label of labels) {
-    logLabel(label)
-  }
-}
 
 async function getLabelsForRepo(): Promise<Label[]> {
   const {data} = await client.rest.issues.listLabelsForRepo(context.repo)
@@ -43,15 +34,14 @@ async function createLabelIfNotPresent(
 export async function createOrUpdateLabels(
   formattedLabels: string
 ): Promise<Label[]> {
-  const availableLabelsAtBegining: Label[] = await getLabelsForRepo()
-  const requiredLabels: Label[] = parseLabels(formattedLabels)
-  info('Current Labels:')
-  logLabels(availableLabelsAtBegining)
-  info('Required Labels:')
-  logLabels(requiredLabels)
-  for (const label of requiredLabels) {
-    createLabelIfNotPresent(label, availableLabelsAtBegining)
+  if (formattedLabels?.length > 1) {
+    const availableLabelsAtBegining: Label[] = await getLabelsForRepo()
+    const requiredLabels: Label[] = parseLabels(formattedLabels)
+    for (const label of requiredLabels) {
+      createLabelIfNotPresent(label, availableLabelsAtBegining)
+    }
+    const availableLabelsAtEnd: Label[] = await getLabelsForRepo()
+    return availableLabelsAtEnd
   }
-  const availableLabelsAtEnd: Label[] = await getLabelsForRepo()
-  return availableLabelsAtEnd
+  return []
 }
