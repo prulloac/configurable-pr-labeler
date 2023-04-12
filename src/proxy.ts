@@ -11,7 +11,7 @@ export const input: Input = {
   useBodyMetadataLabels: getBooleanInput('useBodyMetadataLabels', {
     required: false
   }),
-  useTitleMetadataLabels: getBooleanInput('useBodyMetadataLabels', {
+  useTitleMetadataLabels: getBooleanInput('useTitleMetadataLabels', {
     required: false
   }),
   complexityLabels: getInput('complexityLabels', {required: false}),

@@ -40,6 +40,11 @@ const parseLogicalLabelsFromFormattedString = (
   return formattedString.split(',').map(v => parseLogicalLabel(v, labelType))
 }
 
+const labelRegexMatch = (scanTarget: string, label: LogicalLabel): boolean => {
+  const regExpFromLabel: RegExp = new RegExp(label.condition)
+  return regExpFromLabel.test(scanTarget)
+}
+
 export const getLabelForChangeSize = (
   changeSize: number,
   sizeLabels: string
@@ -66,4 +71,27 @@ export const isLabelPresent = (
     labelA.name.trim().toLocaleLowerCase() ===
     labelB.name.trim().toLocaleLowerCase()
   return !!labels.find(labelInArray => sameName(labelInArray, label))
+}
+
+export const getPossibleRegularExpressionLabels = (
+  regularExpressionLabels: string
+): LogicalLabel[] => {
+  const logicalLabels: LogicalLabel[] = parseLogicalLabelsFromFormattedString(
+    regularExpressionLabels,
+    LabelType.REGEX
+  )
+  return logicalLabels
+}
+
+export const getMatchingRegularExpressionLabels = (
+  scanTarget: string,
+  possibleLabels: LogicalLabel[]
+): Label[] => {
+  const matchingLabels: Label[] = []
+  for (const label of possibleLabels) {
+    if (labelRegexMatch(scanTarget, label)) {
+      matchingLabels.push(label)
+    }
+  }
+  return matchingLabels
 }
