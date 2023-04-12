@@ -46,6 +46,7 @@ const labelRegexMatch = (scanTarget: string, label: LogicalLabel): boolean => {
   const flags: string | undefined = new RegExp(/\/.{0,3}$/)
     .exec(label.condition)?.[0]
     .replace('/', '')
+  info(`testing with condition: ${condition} and flags: ${flags}`)
   const regExpFromLabel: RegExp = flags
     ? new RegExp(condition, flags)
     : new RegExp(condition)
@@ -89,9 +90,11 @@ export const getPossibleRegularExpressionLabels = (
   return logicalLabels
 }
 
-const logLabel = (label: Label): void =>
-  info(`label: ${label.name}, color: ${label.color}`)
-const logLabels = (labels: Label[]): void => {
+const logLabel = (label: LogicalLabel): void =>
+  info(
+    `label: ${label.name}, color: ${label.color}, condition: ${label.condition}`
+  )
+const logLabels = (labels: LogicalLabel[]): void => {
   for (const label of labels) {
     logLabel(label)
   }
