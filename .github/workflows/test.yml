@@ -2,7 +2,7 @@ name: 'build-test'
 on: # rebuild any PRs and main branch changes
   pull_request:
     types:
-      [opened, reopened, edited]
+      [opened, reopened, edited, synchronize]
     branches:
       - main
       - 'development'
