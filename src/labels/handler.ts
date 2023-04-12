@@ -43,15 +43,18 @@ async function createLabelIfNotPresent(
 export async function createOrUpdateLabels(
   formattedLabels: string
 ): Promise<Label[]> {
-  const availableLabelsAtBegining: Label[] = await getLabelsForRepo()
-  const requiredLabels: Label[] = parseLabels(formattedLabels)
-  info('Current Labels:')
-  logLabels(availableLabelsAtBegining)
-  info('Required Labels:')
-  logLabels(requiredLabels)
-  for (const label of requiredLabels) {
-    createLabelIfNotPresent(label, availableLabelsAtBegining)
+  if (formattedLabels?.length > 1) {
+    const availableLabelsAtBegining: Label[] = await getLabelsForRepo()
+    const requiredLabels: Label[] = parseLabels(formattedLabels)
+    info('Current Labels:')
+    logLabels(availableLabelsAtBegining)
+    info('Required Labels:')
+    logLabels(requiredLabels)
+    for (const label of requiredLabels) {
+      createLabelIfNotPresent(label, availableLabelsAtBegining)
+    }
+    const availableLabelsAtEnd: Label[] = await getLabelsForRepo()
+    return availableLabelsAtEnd
   }
-  const availableLabelsAtEnd: Label[] = await getLabelsForRepo()
-  return availableLabelsAtEnd
+  return []
 }

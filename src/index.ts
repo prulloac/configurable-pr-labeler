@@ -47,6 +47,8 @@ async function run(): Promise<void> {
     ).data
     await createOrUpdateLabels(input.complexityLabels)
     await createOrUpdateLabels(input.sizeLabels)
+    await createOrUpdateLabels(input.titleMetadataLabels)
+    await createOrUpdateLabels(input.bodyMetadataLabels)
     if (input.useComplexityLabels) {
       await handleSizeLabels(additions + deletions, input.complexityLabels)
     }

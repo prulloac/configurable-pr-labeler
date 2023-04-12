@@ -41,7 +41,14 @@ const parseLogicalLabelsFromFormattedString = (
 }
 
 const labelRegexMatch = (scanTarget: string, label: LogicalLabel): boolean => {
-  const regExpFromLabel: RegExp = new RegExp(label.condition)
+  const condition: string =
+    new RegExp(/(?<=\/).*(?=\/)/).exec(label.condition)?.[0] || ''
+  const flags: string | undefined = new RegExp(/\/.{0,3}$/)
+    .exec(label.condition)?.[0]
+    .replace('/', '')
+  const regExpFromLabel: RegExp = flags
+    ? new RegExp(condition, flags)
+    : new RegExp(condition)
   return regExpFromLabel.test(scanTarget)
 }
 
