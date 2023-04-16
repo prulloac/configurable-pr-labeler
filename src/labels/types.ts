@@ -1,6 +1,6 @@
 export class ConditionalLabel {
   name!: string
-  description: string | undefined
+  description?: string
   color?: string
   conditions?: any[]
 }
@@ -8,5 +8,5 @@ export class ConditionalLabel {
 export type RepoLabel = {
   name: string
   color?: string
-  description: string | undefined
+  description?: string
 }

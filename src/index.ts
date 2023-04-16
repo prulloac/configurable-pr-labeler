@@ -5,9 +5,6 @@ import {ConditionalLabel, RepoLabel} from './labels/types'
 import {load as loadYaml} from 'js-yaml'
 
 type ClientType = ReturnType<typeof getOctokit>
-class ConfigurationType {
-  labels!: ConditionalLabel[]
-}
 
 function parseConfigObject(configObject: any): ConditionalLabel[] {
   const config: ConditionalLabel[] = new Array<ConditionalLabel>()
@@ -16,7 +13,13 @@ function parseConfigObject(configObject: any): ConditionalLabel[] {
     throw Error('Configuration does not have labels key')
   }
   for (const label of configObject.labels) {
-    if (label instanceof ConditionalLabel) {
+    const keys = Object.keys(label)
+    if (keys.includes('name') && keys.includes('conditions')) {
+      const conditionalLabel: ConditionalLabel = new ConditionalLabel()
+      conditionalLabel.name = label.name
+      conditionalLabel.conditions = label.conditions
+      conditionalLabel.color = label.color || undefined
+      conditionalLabel.description = label.description || undefined
       config.push(label)
     } else {
       warning(`input readed as: ${JSON.stringify(label)}`)

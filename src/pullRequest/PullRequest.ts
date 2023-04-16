@@ -8,9 +8,6 @@ interface FilesChanged {
 }
 
 export class PullRequest {
-  apply(config: ConditionalLabel[]) {
-    throw new Error('Method not implemented.')
-  }
   number!: number
   title!: string
   body!: string
@@ -66,5 +63,9 @@ export class PullRequest {
       issue_number: this.number,
       labels: [label.name]
     })
+  }
+
+  async apply(config: ConditionalLabel[]) {
+    throw new Error('Method not implemented.')
   }
 }
