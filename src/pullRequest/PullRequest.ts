@@ -11,7 +11,7 @@ export class PullRequest {
   number!: number
   title!: string
   body!: string
-  filesChanged!: FilesChanged
+  filesChanged: FilesChanged = {quantity: 0, files: []}
   labels!: RepoLabel[]
   linesChanged!: number
   mergeable!: boolean
