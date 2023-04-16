@@ -57,7 +57,11 @@ async function syncLabels(client: ClientType, config: ConditionalLabel[]) {
     if (currentLabels.includes(labelName)) {
       continue
     }
-    const usableArgs: RepoLabel = {...label, name: labelName}
+    const usableArgs: RepoLabel = {
+      name: labelName,
+      color: label.color?.replace('#', '') || undefined,
+      description: label.description || undefined
+    }
     info(`creating label: ${labelName} with : ${JSON.stringify(usableArgs)}`)
     await client.rest.issues.createLabel({...context.repo, ...usableArgs})
   }
