@@ -9,6 +9,11 @@
     },
     "rules": {
         "camelcase": "off",
+        "no-shadow": "off",
+        "no-unused-vars": "off",
+        "filenames/match-regex": "off",
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/no-shadow": "error",
         "@typescript-eslint/no-floating-promises": "off"
     },
     "env": {

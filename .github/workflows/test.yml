@@ -23,5 +23,3 @@ jobs:
       - uses: ./
         with:
           token: ${{secrets.GITHUB_TOKEN}}
-          useTitleMetadataLabels: true
-          useBodyMetadataLabels: true

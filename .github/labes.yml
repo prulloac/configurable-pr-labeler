@@ -1,0 +1,61 @@
+labels:
+  - name: "simple :thinking:"
+    color: "#F2C5E0"
+    conditions:
+      - lines:
+          max: 40
+  - name: "normal :thinking:"
+    color: "#EC8FD0"
+    conditions:
+      - lines:
+          min: 40
+          max: 200
+  - name: "complex :thinking:"
+    color: "#D43790"
+    conditions:
+      - lines:
+          max: 1000
+          min: 200
+  - name: "headache :thinking:"
+    color: "#AE388B"
+    conditions:
+      - lines:
+          min: 1000
+  - name: "important ⚠️"
+    conditions:
+      - and:
+        - title: "/^hotfix\/[a-z0-9\-_ &#$@!?%]+$/i"
+        - lines:
+            min: 500
+      - body: "/#important/gmi"
+  - name: "wip :construction:"
+    conditions:
+      - body: "/#(wip|work in progress|work_in_progress|work-in-progress)/gmi"
+  - name: "feature :rocket:"
+    conditions:
+      - title: "/^feat(ure)?\/[a-z0-9\-_ &#$@!?%]+$/i"
+  - name: "fix :wrench:"
+    conditions:
+      - title: "/^fix\/[a-z0-9\-_ &#$@!?%]+$/i"
+  - name: "hotfix :fire_engine:"
+    conditions:
+      - title: "/^hotfix\/[a-z0-9\-_ &#$@!?%]+$/i"
+  - name: "poc :thought_balloon:"
+    conditions:
+      - title: "/^(poc|test)\/[a-z0-9\-_ &#$@!?%]+$/i"
+  - name: "small :file_folder:"
+    conditions:
+      - files:
+        max: 10
+  - name: "medium :file_folder:"
+    conditions:
+      - files:
+        max: 25
+  - name: "large :file_folder:"
+    conditions:
+      - files:
+        max: 50
+  - name: "titanic :file_folder"
+    conditions:
+      - files:
+        min: 50

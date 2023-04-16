@@ -1,66 +1,71 @@
-import {setFailed} from '@actions/core'
-import {context} from '@actions/github'
-import {createOrUpdateLabels} from './labels/handler'
-import * as labelUtils from './labels/utils'
-import {pullRequestHandler} from './pullRequest/handler'
-import {Label, LogicalLabel} from './types'
-import {input, client, prNumber} from './proxy'
+import {getInput, setFailed} from '@actions/core'
+import {context, getOctokit} from '@actions/github'
+import {PullRequest} from './pullRequest/PullRequest'
+import {ConditionalLabel, RepoLabel} from './labels/types'
+import {load as loadYaml} from 'js-yaml'
 
-async function handleSizeLabels(changeSize: number, labelsString: string) {
-  const complexityLabel: Label = labelUtils.getLabelForChangeSize(
-    changeSize,
-    labelsString
-  )
-  if (!pullRequestHandler.labelCurrentlyInPullRequest(complexityLabel)) {
-    const possibleLabels: Label[] = labelUtils.parseLabels(labelsString)
-    await pullRequestHandler.cleanLabels(possibleLabels)
-    await pullRequestHandler.addLabel(complexityLabel)
-  }
+type ClientType = ReturnType<typeof getOctokit>
+class ConfigurationType {
+  labels!: ConditionalLabel[]
 }
 
-async function handleRegexLabels(
-  scanTarget: string,
-  regularExpressionLabels: string
-) {
-  const possibleLabels: LogicalLabel[] =
-    labelUtils.getPossibleRegularExpressionLabels(regularExpressionLabels)
-  const matchingLabels: Label[] = labelUtils.getMatchingRegularExpressionLabels(
-    scanTarget,
-    possibleLabels
-  )
-  if (matchingLabels.length > 0) {
-    for (const label of matchingLabels) {
-      await pullRequestHandler.cleanLabels(possibleLabels)
-      await pullRequestHandler.addLabel(label)
+function parseConfigObject(configObject: any): ConditionalLabel[] {
+  const config: ConditionalLabel[] = new Array<ConditionalLabel>()
+  if (!(configObject instanceof ConfigurationType)) {
+    throw Error('Configuration does not have labels key')
+  }
+  for (const label of configObject.labels) {
+    config.push(label)
+  }
+  return config
+}
+
+async function fetchConfig(
+  client: ClientType,
+  configFilePath: string
+): Promise<ConditionalLabel[]> {
+  const response: any = await client.rest.repos.getContent({
+    repo: context.repo.repo,
+    owner: context.repo.owner,
+    ref: context.sha,
+    path: configFilePath
+  })
+  const configString: string = Buffer.from(
+    response.data.content,
+    response.data.encoding
+  ).toString()
+  const configObject: any = loadYaml(configString)
+  return parseConfigObject(configObject)
+}
+
+async function loadPullRequestData(client: ClientType): Promise<PullRequest> {
+  const pullRequest: PullRequest = new PullRequest(client)
+  await pullRequest.load()
+  return pullRequest
+}
+
+async function syncLabels(client: ClientType, config: ConditionalLabel[]) {
+  const {data} = await client.rest.issues.listLabelsForRepo({...context.repo})
+  const currentLabels = data.map(repoLabel => repoLabel.name)
+  for (const label of config) {
+    if (currentLabels.includes(label.name)) {
+      continue
     }
+    const usableArgs: RepoLabel = {...label}
+    await client.rest.issues.createLabel({...context.repo, ...usableArgs})
   }
 }
 
 async function run(): Promise<void> {
   try {
-    if (prNumber === 0) {
-      throw new Error(`This Action is only supported on 'pull_request' events.`)
-    }
-    await pullRequestHandler.loadCurrentLabels()
-    const {title, body, additions, deletions, changed_files} = (
-      await client.rest.pulls.get({...context.repo, pull_number: prNumber})
-    ).data
-    await createOrUpdateLabels(input.complexityLabels)
-    await createOrUpdateLabels(input.sizeLabels)
-    await createOrUpdateLabels(input.titleMetadataLabels)
-    await createOrUpdateLabels(input.bodyMetadataLabels)
-    if (input.useComplexityLabels) {
-      await handleSizeLabels(additions + deletions, input.complexityLabels)
-    }
-    if (input.useSizeLabels) {
-      await handleSizeLabels(changed_files, input.sizeLabels)
-    }
-    if (input.useBodyMetadataLabels && (body?.length || 0) > 1) {
-      await handleRegexLabels(`${body}`, input.bodyMetadataLabels)
-    }
-    if (input.useTitleMetadataLabels && (title?.length || 0) > 1) {
-      await handleRegexLabels(title, input.titleMetadataLabels)
-    }
+    const client: ClientType = getOctokit(getInput('token', {required: true}))
+    const config: ConditionalLabel[] = await fetchConfig(
+      client,
+      getInput('configuration_path', {required: false})
+    )
+    await syncLabels(client, config)
+    const pullRequest: PullRequest = await loadPullRequestData(client)
+    await pullRequest.apply(config)
   } catch (error: any) {
     setFailed(error.message)
   }
