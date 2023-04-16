@@ -10,7 +10,7 @@ class ConfigurationType {
 }
 
 function parseConfigObject(configObject: any): ConditionalLabel[] {
-  info(`input readed as: ${configObject}`)
+  info(`input readed as: ${JSON.stringify(configObject)}`)
   const config: ConditionalLabel[] = new Array<ConditionalLabel>()
   if (!(configObject instanceof ConfigurationType)) {
     throw Error('Configuration does not have labels key')
