@@ -1,12 +1,8 @@
-export interface Condition {
-  [key: string]: string
-}
-
 export class ConditionalLabel {
   name!: string
   description: string | undefined
   color?: string
-  conditions!: Condition[]
+  conditions?: any[]
 }
 
 export type RepoLabel = {
