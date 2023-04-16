@@ -1,4 +1,4 @@
-import {getInput, setFailed, info} from '@actions/core'
+import {getInput, setFailed, warning} from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 import {PullRequest} from './pullRequest/PullRequest'
 import {ConditionalLabel, RepoLabel} from './labels/types'
@@ -10,13 +10,18 @@ class ConfigurationType {
 }
 
 function parseConfigObject(configObject: any): ConditionalLabel[] {
-  info(`input readed as: ${JSON.stringify(configObject)}`)
   const config: ConditionalLabel[] = new Array<ConditionalLabel>()
-  if (!(configObject instanceof ConfigurationType)) {
+  if (!Object.keys(configObject).includes('labels')) {
+    warning(`input readed as: ${JSON.stringify(configObject)}`)
     throw Error('Configuration does not have labels key')
   }
   for (const label of configObject.labels) {
-    config.push(label)
+    if (label instanceof ConditionalLabel) {
+      config.push(label)
+    } else {
+      warning(`input readed as: ${JSON.stringify(label)}`)
+      throw Error('ConditionalLabel not instantiable')
+    }
   }
   return config
 }
