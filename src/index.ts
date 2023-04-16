@@ -14,18 +14,9 @@ function parseConfigObject(configObject: any): ConditionalLabel[] {
     throw Error('Configuration does not have labels key')
   }
   for (const label of configObject.labels) {
-    if (!(label instanceof ConditionalLabel)) {
-      warning(`input readed as: ${JSON.stringify(label)}`)
-      throw Error('ConditionalLabel not instantiable using instanceof')
-    }
     const keys = Object.keys(label)
     if (keys.includes('name') && keys.includes('conditions')) {
-      const conditionalLabel: ConditionalLabel = new ConditionalLabel()
-      conditionalLabel.name = label.name
-      conditionalLabel.conditions = label.conditions
-      conditionalLabel.color = label.color || undefined
-      conditionalLabel.description = label.description || undefined
-      config.push(label)
+      config.push(label as ConditionalLabel)
     } else {
       warning(`input readed as: ${JSON.stringify(label)}`)
       throw Error('ConditionalLabel not instantiable')

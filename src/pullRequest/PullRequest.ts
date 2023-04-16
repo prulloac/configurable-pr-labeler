@@ -1,5 +1,10 @@
 import {context, getOctokit} from '@actions/github'
-import {ConditionalLabel, RepoLabel} from '../labels/types'
+import {
+  Condition,
+  Conditions,
+  ConditionalLabel,
+  RepoLabel
+} from '../labels/types'
 
 type ClientType = ReturnType<typeof getOctokit>
 interface FilesChanged {
@@ -65,11 +70,27 @@ export class PullRequest {
     })
   }
 
+  checkCondition(condition: Condition): boolean {
+    if (condition instanceof Conditions.MaxLinesCondition) {
+      return this.linesChanged < condition.maxLines
+    }
+    if (condition instanceof Conditions.MinLinesCondition) {
+      return this.linesChanged >= condition.minLines
+    }
+    if (condition instanceof Conditions.MaxFilesCondition) {
+      return this.linesChanged < condition.maxFiles
+    }
+    if (condition instanceof Conditions.MinFilesCondition) {
+      return this.linesChanged >= condition.minFiles
+    }
+    return false
+  }
+
   async apply(config: ConditionalLabel[]) {
     for (const label of config) {
-      if (Object.keys(label).includes('')) {
+      if (label.conditions.every(this.checkCondition)) {
+        await this.addLabel(label as RepoLabel)
       }
     }
-    throw new Error('Method not implemented.')
   }
 }

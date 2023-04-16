@@ -1,20 +1,62 @@
-export type Condition = {
-  [key: string]: string | number | boolean
+export interface Condition {}
+
+class MaxLinesCondition implements Condition {
+  maxLines!: number
 }
 
-export type CompositeCondition = {
-  and: Condition[]
+class MinLinesCondition implements Condition {
+  minLines!: number
 }
 
-export class ConditionalLabel {
-  name!: string
+class MaxFilesCondition implements Condition {
+  maxFiles!: number
+}
+
+class MinFilesCondition implements Condition {
+  minFiles!: number
+}
+
+class BodyCondition implements Condition {
+  body!: string
+}
+
+class TitleCondition implements Condition {
+  title!: string
+}
+
+class FilePathCondition implements Condition {
+  path!: string[]
+}
+
+class MergeableCondition implements Condition {
+  mergeable!: boolean
+}
+
+class RebaseableCondition implements Condition {
+  rebaseable!: boolean
+}
+
+export type ConditionalLabel = {
+  name: string
   description?: string
   color?: string
-  conditions?: (Condition | CompositeCondition)[]
+  conditions: Condition[]
 }
 
 export type RepoLabel = {
   name: string
   color?: string
   description?: string
+}
+
+export const Conditions = {
+  MaxFilesCondition,
+  MinFilesCondition,
+  MaxLinesCondition,
+  MinLinesCondition,
+  TitleCondition,
+  BodyCondition,
+  FilePathCondition,
+  MergeableCondition,
+  RebaseableCondition
 }

@@ -6,24 +6,23 @@ labels:
   - name: "normal :thinking:"
     color: "#EC8FD0"
     conditions:
-      - and:
-        - minLines: 40
-        - maxLines: 200
+      - minLines: 40
+      - maxLines: 200
   - name: "complex :thinking:"
     color: "#D43790"
     conditions:
-      - and:
-        - maxLines: 1000
-        - minLines: 200
+      - maxLines: 1000
+      - minLines: 200
   - name: "headache :thinking:"
     color: "#AE388B"
     conditions:
       - minLines: 1000
   - name: "important ⚠️"
     conditions:
-      - and:
-        - title: "/^hotfix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
-        - minLines: 500
+      - title: "/^hotfix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
+      - minLines: 500
+  - name: "important ⚠️"
+    conditions:
       - body: "/#important/gmi"
   - name: "wip :construction:"
     conditions:
@@ -45,14 +44,12 @@ labels:
       - maxFiles: 10
   - name: "medium :file_folder:"
     conditions:
-      - and:
-        - maxFiles: 25
-        - minFiles: 10
+      - maxFiles: 25
+      - minFiles: 10
   - name: "large :file_folder:"
     conditions:
-      - and:
-        - maxFiles: 50
-        - minFiles: 10
+      - maxFiles: 50
+      - minFiles: 10
   - name: "titanic :file_folder:"
     conditions:
       - minFiles: 50
