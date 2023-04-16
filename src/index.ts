@@ -1,4 +1,4 @@
-import {getInput, setFailed} from '@actions/core'
+import {getInput, setFailed, info} from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 import {PullRequest} from './pullRequest/PullRequest'
 import {ConditionalLabel, RepoLabel} from './labels/types'
@@ -10,6 +10,7 @@ class ConfigurationType {
 }
 
 function parseConfigObject(configObject: any): ConditionalLabel[] {
+  info(`input readed as: ${configObject}`)
   const config: ConditionalLabel[] = new Array<ConditionalLabel>()
   if (!(configObject instanceof ConfigurationType)) {
     throw Error('Configuration does not have labels key')
