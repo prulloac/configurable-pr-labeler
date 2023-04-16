@@ -1,4 +1,4 @@
-import {getInput, setFailed, warning} from '@actions/core'
+import {getInput, info, setFailed, warning} from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 import {PullRequest} from './pullRequest/PullRequest'
 import {ConditionalLabel, RepoLabel} from './labels/types'
@@ -58,6 +58,7 @@ async function syncLabels(client: ClientType, config: ConditionalLabel[]) {
       continue
     }
     const usableArgs: RepoLabel = {...label, name: labelName}
+    info(`creating label: ${labelName} with : ${JSON.stringify(usableArgs)}`)
     await client.rest.issues.createLabel({...context.repo, ...usableArgs})
   }
 }
