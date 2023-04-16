@@ -24,7 +24,7 @@ labels:
   - name: "important ⚠️"
     conditions:
       - and:
-        - title: "/^hotfix\/[a-z0-9\-_ &#$@!?%]+$/i"
+        - title: "/^hotfix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
         - lines:
             min: 500
       - body: "/#important/gmi"
@@ -33,16 +33,16 @@ labels:
       - body: "/#(wip|work in progress|work_in_progress|work-in-progress)/gmi"
   - name: "feature :rocket:"
     conditions:
-      - title: "/^feat(ure)?\/[a-z0-9\-_ &#$@!?%]+$/i"
+      - title: "/^feat(ure)?\\/[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "fix :wrench:"
     conditions:
-      - title: "/^fix\/[a-z0-9\-_ &#$@!?%]+$/i"
+      - title: "/^fix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "hotfix :fire_engine:"
     conditions:
-      - title: "/^hotfix\/[a-z0-9\-_ &#$@!?%]+$/i"
+      - title: "/^hotfix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "poc :thought_balloon:"
     conditions:
-      - title: "/^(poc|test)\/[a-z0-9\-_ &#$@!?%]+$/i"
+      - title: "/^(poc|test)\\/[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "small :file_folder:"
     conditions:
       - files:
