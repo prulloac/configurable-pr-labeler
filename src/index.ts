@@ -3,6 +3,7 @@ import {context, getOctokit} from '@actions/github'
 import {PullRequest} from './pullRequest/PullRequest'
 import {ConditionalLabel, RepoLabel} from './labels/types'
 import {load as loadYaml} from 'js-yaml'
+import {unemojify} from 'node-emoji'
 
 type ClientType = ReturnType<typeof getOctokit>
 
@@ -13,6 +14,10 @@ function parseConfigObject(configObject: any): ConditionalLabel[] {
     throw Error('Configuration does not have labels key')
   }
   for (const label of configObject.labels) {
+    if (!(label instanceof ConditionalLabel)) {
+      warning(`input readed as: ${JSON.stringify(label)}`)
+      throw Error('ConditionalLabel not instantiable using instanceof')
+    }
     const keys = Object.keys(label)
     if (keys.includes('name') && keys.includes('conditions')) {
       const conditionalLabel: ConditionalLabel = new ConditionalLabel()
@@ -57,10 +62,11 @@ async function syncLabels(client: ClientType, config: ConditionalLabel[]) {
   const {data} = await client.rest.issues.listLabelsForRepo({...context.repo})
   const currentLabels = data.map(repoLabel => repoLabel.name)
   for (const label of config) {
-    if (currentLabels.includes(label.name)) {
+    const labelName = unemojify(label.name)
+    if (currentLabels.includes(labelName)) {
       continue
     }
-    const usableArgs: RepoLabel = {...label}
+    const usableArgs: RepoLabel = {...label, name: labelName}
     await client.rest.issues.createLabel({...context.repo, ...usableArgs})
   }
 }

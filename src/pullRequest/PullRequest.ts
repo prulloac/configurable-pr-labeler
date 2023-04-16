@@ -66,6 +66,10 @@ export class PullRequest {
   }
 
   async apply(config: ConditionalLabel[]) {
+    for (const label of config) {
+      if (Object.keys(label).includes('')) {
+      }
+    }
     throw new Error('Method not implemented.')
   }
 }
