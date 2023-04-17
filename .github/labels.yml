@@ -59,4 +59,3 @@ labels:
   - name: "Ready! :white_check_mark:"
     conditions:
       - mergeable: true
-      - rebaseable: false
