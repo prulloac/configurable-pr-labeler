@@ -105,6 +105,14 @@ export class PullRequest {
 			const matchers = (condition.files as string[]).map(p => new Minimatch(p))
 			return this.filesChanged.files.some(file => matchers.some(matcher => matcher.match(file)))
 		}
+		if (condition.mergeable) {
+			info(`checking if pr is mergeable: ${condition.mergeable}`)
+			return this.mergeable === condition.mergeable
+		}
+		if (condition.rebaseable) {
+			info(`checking if pr is rebaseable: ${condition.rebaseable}`)
+			return this.rebaseable === condition.rebaseable
+		}
 		return false
 	}
 
