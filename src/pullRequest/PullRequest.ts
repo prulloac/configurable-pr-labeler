@@ -64,6 +64,7 @@ export class PullRequest {
 	}
 
 	private checkCondition(condition: Condition): boolean {
+		info(`evaluating condition: ${JSON.stringify(condition)}`)
 		if (condition instanceof Conditions.MaxLinesCondition) {
 			info(`checking for maxLines: ${condition.maxLines}`)
 			return this.linesChanged < condition.maxLines

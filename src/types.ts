@@ -40,11 +40,11 @@ class RebaseableCondition implements Condition {
 	rebaseable!: boolean
 }
 
-export type ConditionalLabel = {
-	name: string
+export class ConditionalLabel {
+	name!: string
 	description?: string
 	color?: string
-	conditions: Condition[]
+	conditions!: Condition[]
 }
 
 export type RepoLabel = {
