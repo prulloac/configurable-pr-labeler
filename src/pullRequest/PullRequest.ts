@@ -1,6 +1,7 @@
 import {info} from '@actions/core'
 import {context} from '@actions/github'
 import {ConditionalLabel, RepoLabel, ClientType} from '../types'
+import {Minimatch} from 'minimatch'
 
 interface FilesChanged {
 	files: string[]
@@ -66,6 +67,14 @@ export class PullRequest {
 		}
 	}
 
+	private regexMatch(scanTarget: string, pattern: string): boolean {
+		const condition: string = new RegExp(/(?<=\/).*(?=\/)/).exec(pattern)?.[0] || ''
+		const flags: string | undefined = new RegExp(/\/.{0,3}$/).exec(pattern)?.[0].replace('/', '')
+		info(`testing with condition: ${condition} and flags: ${flags}`)
+		const regExpFromLabel: RegExp = flags ? new RegExp(condition, flags) : new RegExp(condition)
+		return regExpFromLabel.test(scanTarget)
+	}
+
 	private checkCondition(condition: any): boolean {
 		if (condition.maxLines) {
 			info(`checking for maxLines: ${condition.maxLines}`)
@@ -82,6 +91,19 @@ export class PullRequest {
 		if (condition.minFiles) {
 			info(`checking for minFiles: ${condition.minFiles}`)
 			return this.filesChanged.quantity >= condition.minFiles
+		}
+		if (condition.title) {
+			info(`checking for title regex: ${condition.title}`)
+			return this.regexMatch(this.title, condition.title)
+		}
+		if (condition.body) {
+			info(`checking for body regex: ${condition.body}`)
+			return this.regexMatch(this.body, condition.body)
+		}
+		if (condition.files) {
+			info(`checking for files pattern: ${condition.files}`)
+			const matchers = (condition.files as string[]).map(p => new Minimatch(p))
+			return this.filesChanged.files.some(file => matchers.some(matcher => matcher.match(file)))
 		}
 		return false
 	}

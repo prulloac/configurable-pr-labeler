@@ -53,3 +53,6 @@ labels:
   - name: "titanic :file_folder:"
     conditions:
       - minFiles: 50
+  - name: "JS/TS"
+    conditions:
+      - files: ["**/*.js", "**/*.ts"]
