@@ -75,11 +75,11 @@ export class PullRequest {
 		}
 		if (condition.maxFiles) {
 			info(`checking for maxFiles: ${condition.maxFiles}`)
-			return this.linesChanged < condition.maxFiles
+			return this.filesChanged.quantity < condition.maxFiles
 		}
 		if (condition.minFiles) {
 			info(`checking for minFiles: ${condition.minFiles}`)
-			return this.linesChanged >= condition.minFiles
+			return this.filesChanged.quantity >= condition.minFiles
 		}
 		return false
 	}
