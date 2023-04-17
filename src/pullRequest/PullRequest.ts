@@ -1,6 +1,6 @@
 import {info} from '@actions/core'
 import {context} from '@actions/github'
-import {Condition, Conditions, ConditionalLabel, RepoLabel, ClientType} from '../types'
+import {Condition, ConditionalLabel, RepoLabel, ClientType} from '../types'
 
 interface FilesChanged {
 	files: string[]
@@ -63,21 +63,21 @@ export class PullRequest {
 		})
 	}
 
-	private checkCondition(condition: Condition): boolean {
+	private checkCondition(condition: any): boolean {
 		info(`evaluating condition: ${JSON.stringify(condition)}`)
-		if (condition instanceof Conditions.MaxLinesCondition) {
+		if (condition.maxLines) {
 			info(`checking for maxLines: ${condition.maxLines}`)
 			return this.linesChanged < condition.maxLines
 		}
-		if (condition instanceof Conditions.MinLinesCondition) {
+		if (condition.minLines) {
 			info(`checking for minLines: ${condition.minLines}`)
 			return this.linesChanged >= condition.minLines
 		}
-		if (condition instanceof Conditions.MaxFilesCondition) {
+		if (condition.maxFiles) {
 			info(`checking for maxFiles: ${condition.maxFiles}`)
 			return this.linesChanged < condition.maxFiles
 		}
-		if (condition instanceof Conditions.MinFilesCondition) {
+		if (condition.minFiles) {
 			info(`checking for minFiles: ${condition.minFiles}`)
 			return this.linesChanged >= condition.minFiles
 		}
