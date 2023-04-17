@@ -1,6 +1,6 @@
 import {info} from '@actions/core'
 import {context} from '@actions/github'
-import {Condition, ConditionalLabel, RepoLabel, ClientType} from '../types'
+import {ConditionalLabel, RepoLabel, ClientType} from '../types'
 
 interface FilesChanged {
 	files: string[]
@@ -12,7 +12,7 @@ export class PullRequest {
 	title!: string
 	body!: string
 	filesChanged: FilesChanged = {quantity: 0, files: []}
-	labels!: RepoLabel[]
+	labels!: string[]
 	linesChanged!: number
 	mergeable!: boolean
 	rebaseable!: boolean
@@ -35,11 +35,7 @@ export class PullRequest {
 		this.body = `${metaData.body}`
 		this.title = metaData.title
 		this.linesChanged = metaData.additions + metaData.deletions
-		this.labels = metaData.labels.map(v => ({
-			name: v.name,
-			color: v.color,
-			description: v.description || undefined
-		}))
+		this.labels = metaData.labels.map(v => v.name)
 		this.mergeable = metaData.mergeable ?? false
 		this.rebaseable = metaData.rebaseable ?? false
 		this.filesChanged.quantity = metaData.changed_files
@@ -63,8 +59,14 @@ export class PullRequest {
 		})
 	}
 
+	async removeLabel(label: RepoLabel) {
+		if (this.labels.find(prLabel => prLabel === label.name)) {
+			info(`removing label ${label.name} from pull request`)
+			this.client.rest.issues.removeLabel({...context.repo, issue_number: this.number, name: label.name})
+		}
+	}
+
 	private checkCondition(condition: any): boolean {
-		info(`evaluating condition: ${JSON.stringify(condition)}`)
 		if (condition.maxLines) {
 			info(`checking for maxLines: ${condition.maxLines}`)
 			return this.linesChanged < condition.maxLines
@@ -88,6 +90,8 @@ export class PullRequest {
 		for (const label of config) {
 			if (label.conditions.every(condition => this.checkCondition(condition))) {
 				await this.addLabel(label as RepoLabel)
+			} else {
+				await this.removeLabel(label as RepoLabel)
 			}
 		}
 	}

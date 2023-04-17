@@ -49,7 +49,7 @@ labels:
   - name: "large :file_folder:"
     conditions:
       - maxFiles: 50
-      - minFiles: 10
+      - minFiles: 25
   - name: "titanic :file_folder:"
     conditions:
       - minFiles: 50
