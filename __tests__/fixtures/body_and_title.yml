@@ -1,0 +1,7 @@
+labels:
+  - name: "title label"
+    conditions:
+      - title: "foo"
+  - name: "body label"
+    conditions:
+      - body: "bar"

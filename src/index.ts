@@ -1,4 +1,4 @@
-import {getInput, info, setFailed, warning} from '@actions/core'
+import * as core from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 import {PullRequest} from './pullRequest/PullRequest'
 import {ClientType, ConditionalLabel, RepoLabel} from './types'
@@ -6,17 +6,17 @@ import {load as loadYaml} from 'js-yaml'
 import {unemojify} from 'node-emoji'
 
 function parseConfigObject(configObject: any): ConditionalLabel[] {
-	const config: ConditionalLabel[] = new Array<ConditionalLabel>()
 	if (!Object.keys(configObject).includes('labels')) {
-		warning(`input readed as: ${JSON.stringify(configObject)}`)
+		core.warning(`input readed as: ${JSON.stringify(configObject)}`)
 		throw Error('Configuration does not have labels key')
 	}
+	const config: ConditionalLabel[] = new Array<ConditionalLabel>()
 	for (const label of configObject.labels) {
 		const keys = Object.keys(label)
 		if (keys.includes('name') && keys.includes('conditions')) {
 			config.push(label as ConditionalLabel)
 		} else {
-			warning(`input readed as: ${JSON.stringify(label)}`)
+			core.warning(`input readed as: ${JSON.stringify(label)}`)
 			throw Error('ConditionalLabel not instantiable')
 		}
 	}
@@ -58,20 +58,21 @@ async function syncLabels(client: ClientType, config: ConditionalLabel[]) {
 		if (currentLabels.includes(label.name)) {
 			continue
 		}
-		info(`creating label: ${label.name} with : ${JSON.stringify(label)}`)
+		core.info(`creating label: ${label.name} with : ${JSON.stringify(label)}`)
 		await client.rest.issues.createLabel({...context.repo, ...label})
 	}
 }
 
-async function run(): Promise<void> {
+export async function run(): Promise<void> {
 	try {
-		const client: ClientType = getOctokit(getInput('token', {required: true}))
-		const config: ConditionalLabel[] = await fetchConfig(client, getInput('configuration_path', {required: false}))
+		const client: ClientType = getOctokit(core.getInput('token', {required: true}))
+		const config: ConditionalLabel[] = await fetchConfig(client, core.getInput('configuration_path', {required: false}))
 		await syncLabels(client, config)
 		const pullRequest: PullRequest = await loadPullRequestData(client)
 		await pullRequest.apply(config)
 	} catch (error: any) {
-		setFailed(error.message)
+		core.error(error.stack)
+		core.setFailed(error.message)
 	}
 }
 

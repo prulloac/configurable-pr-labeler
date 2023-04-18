@@ -11,6 +11,7 @@
         "camelcase": "off",
         "no-shadow": "off",
         "no-unused-vars": "off",
+        "i18n-text/no-en": "warn",
         "filenames/match-regex": "off",
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-shadow": "error",

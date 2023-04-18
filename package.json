@@ -7,9 +7,9 @@
     "build": "tsc",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
-    "test": "jest --passWithNoTests",
-    "lint": "eslint --fix",
+    "lint": "eslint src/**/*.ts --fix",
     "package": "ncc build -m",
+    "test": "jest --passWithNoTests",
     "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
   },
   "author": "prulloac",
