@@ -1,0 +1,4 @@
+labels:
+  - name: "JS/TS"
+    conditions:
+      - files: ["**/*.js"]

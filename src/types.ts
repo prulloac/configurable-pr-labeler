@@ -4,11 +4,11 @@ export type ClientType = ReturnType<typeof getOctokit>
 
 export interface Condition {}
 
-export class ConditionalLabel {
-	name!: string
+export type ConditionalLabel = {
+	name: string
 	description?: string
 	color?: string
-	conditions!: Condition[]
+	conditions: Condition[]
 }
 
 export type RepoLabel = {

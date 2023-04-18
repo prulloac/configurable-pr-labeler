@@ -45,11 +45,11 @@ export class PullRequest {
 			pull_number: this.number
 		})
 		this.author = `${commitData[0].committer?.login}`
-		const {data: filesData} = await this.client.rest.pulls.listFiles({
+		const listFileOptions = this.client.rest.pulls.listFiles.endpoint.merge({
 			...context.repo,
 			pull_number: this.number
 		})
-		this.filesChanged.files = filesData.map(fileData => fileData.filename)
+		this.filesChanged.files = (await this.client.paginate(listFileOptions)).map((fileData: any) => fileData.filename)
 	}
 
 	async addLabel(label: RepoLabel) {
