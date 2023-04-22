@@ -1,20 +1,16 @@
 labels:
   - name: "simple 🤔"
-    color: "#F2C5E0"
     conditions:
       - maxLines: 200
   - name: "normal 🤔"
-    color: "#EC8FD0"
     conditions:
       - minLines: 200
       - maxLines: 1000
   - name: "complex 🤔"
-    color: "#D43790"
     conditions:
       - minLines: 1000
       - maxLines: 5000
   - name: "headache 🤔"
-    color: "#AE388B"
     conditions:
       - minLines: 5000
   - name: "important❗"

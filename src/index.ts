@@ -44,22 +44,18 @@ async function loadPullRequestData(client: ClientType): Promise<PullRequest> {
 async function syncLabels(client: ClientType, newLabels: ConditionalLabel[]) {
 	const {data} = await client.rest.issues.listLabelsForRepo({...context.repo})
 	const currentLabels = data.map(repoLabel => repoLabel.name)
-	const newLabelsEntries: RepoLabel[] = new Array<RepoLabel>()
-	for (const newLabel of newLabels) {
-		const labelName = emojify(newLabel.name).trim()
-		const newLabelEntry: RepoLabel = {
-			name: labelName,
-			color: newLabel.color?.replace('#', '') || undefined,
-			description: newLabel.description || undefined
-		} as RepoLabel
-		if (!newLabelsEntries.map(x => x.name).includes(newLabelEntry.name)) {
-			newLabelsEntries.push(newLabelEntry)
-		}
-	}
+	const newLabelsEntries: string[] = newLabels
+		.map(label => emojify(label.name).trim())
+		.reduce((acc, label) => {
+			if (!acc.includes(label)) {
+				acc.push(label)
+			}
+			return acc
+		}, new Array<string>())
 	for (const newLabelEntry of newLabelsEntries) {
-		if (!currentLabels.includes(newLabelEntry.name)) {
-			core.info(`creating label: ${newLabelEntry.name} with : ${JSON.stringify(newLabelEntry)}`)
-			await client.rest.issues.createLabel({...context.repo, ...newLabelEntry})
+		if (!currentLabels.includes(newLabelEntry)) {
+			core.info(`creating label: ${newLabelEntry} with : ${JSON.stringify(newLabelEntry)}`)
+			await client.rest.issues.createLabel({...context.repo, name: newLabelEntry})
 		}
 	}
 }
