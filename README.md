@@ -1,4 +1,4 @@
-# PR Labeler
+# Configurable Pull Request Labeler
 
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/prulloac/pr-labeler)
 ![GitHub contributors](https://img.shields.io/github/contributors/prulloac/pr-labeler)
@@ -45,28 +45,24 @@ This action needs to be configured by creating a `labels.yml` file such as:
 ```yaml
 labels:
   - name: "simple 🤔"
-    color: "#F2C5E0"
     conditions:
       - maxLines: 200
   - name: "normal 🤔"
-    color: "#EC8FD0"
     conditions:
       - minLines: 200
       - maxLines: 1000
   - name: "complex 🤔"
-    color: "#D43790"
     conditions:
       - minLines: 1000
       - maxLines: 5000
   - name: "headache 🤔"
-    color: "#AE388B"
     conditions:
       - minLines: 5000
-  - name: "important ⚠️"
+  - name: "important❗"
     conditions:
       - title: "/^hotfix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
       - minLines: 500
-  - name: "important ⚠️"
+  - name: "important❗"
     conditions:
       - body: "/#important/gmi"
   - name: "wip 🚧"
@@ -74,16 +70,16 @@ labels:
       - body: "/#(wip|work in progress|work_in_progress|work-in-progress)/gmi"
   - name: "feature 🚀"
     conditions:
-      - title: "/^feat(ure)?\\/[a-z0-9\\-_ &#$@!?%]+$/i"
+      - title: "/^feat(ure)?(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "fix 🔧"
     conditions:
-      - title: "/^fix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
+      - title: "/^fix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "hotfix 🚒"
     conditions:
-      - title: "/^hotfix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
+      - title: "/^hotfix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "poc 💭"
     conditions:
-      - title: "/^(poc|test)\\/[a-z0-9\\-_ &#$@!?%]+$/i"
+      - title: "/^(poc|test)(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "small 📁"
     conditions:
       - maxFiles: 10
