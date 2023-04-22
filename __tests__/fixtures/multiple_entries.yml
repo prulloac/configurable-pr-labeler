@@ -1,0 +1,7 @@
+labels:
+  - name: "JS/TS 😃"
+    conditions:
+      - files: ["**/*.js"]
+  - name: "JS/TS 😃"
+    conditions:
+      - minFiles: 0

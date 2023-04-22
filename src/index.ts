@@ -41,20 +41,28 @@ async function loadPullRequestData(client: ClientType): Promise<PullRequest> {
 	return pullRequest
 }
 
-async function syncLabels(client: ClientType, newLabel: ConditionalLabel) {
+async function syncLabels(client: ClientType, newLabels: ConditionalLabel[]) {
 	const {data} = await client.rest.issues.listLabelsForRepo({...context.repo})
 	const currentLabels = data.map(repoLabel => repoLabel.name)
-	const labelName = emojify(newLabel.name).trim()
-	const newLabelEntry: RepoLabel = {
-		name: labelName,
-		color: newLabel.color?.replace('#', '') || undefined,
-		description: newLabel.description || undefined
-	} as RepoLabel
-	if (currentLabels.includes(newLabelEntry.name)) {
-		return
+	const newLabelsEntries: RepoLabel[] = new Array<RepoLabel>()
+	for (const newLabel of newLabels) {
+		const labelName = emojify(newLabel.name).trim()
+		const newLabelEntry: RepoLabel = {
+			name: labelName,
+			color: newLabel.color?.replace('#', '') || undefined,
+			description: newLabel.description || undefined
+		} as RepoLabel
+		if (newLabelsEntries.find(entry => entry.name === newLabelEntry.name)) {
+			continue
+		}
+		newLabelsEntries.push(newLabelEntry)
 	}
-	core.info(`creating label: ${newLabelEntry.name} with : ${JSON.stringify(newLabelEntry)}`)
-	await client.rest.issues.createLabel({...context.repo, ...newLabelEntry})
+	for (const newLabelEntry of newLabelsEntries) {
+		if (!currentLabels.includes(newLabelEntry.name)) {
+			core.info(`creating label: ${newLabelEntry.name} with : ${JSON.stringify(newLabelEntry)}`)
+			await client.rest.issues.createLabel({...context.repo, ...newLabelEntry})
+		}
+	}
 }
 
 export async function run(): Promise<void> {
@@ -64,9 +72,7 @@ export async function run(): Promise<void> {
 			client,
 			core.getInput('configuration_path', {required: false})
 		)
-		for (const label of config) {
-			await syncLabels(client, label)
-		}
+		await syncLabels(client, config)
 		const pullRequest: PullRequest = await loadPullRequestData(client)
 		await pullRequest.apply(config)
 	} catch (error: any) {
