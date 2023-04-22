@@ -44,9 +44,9 @@ async function loadPullRequestData(client: ClientType): Promise<PullRequest> {
 async function syncLabels(client: ClientType, config: ConditionalLabel[]) {
 	const {data} = await client.rest.issues.listLabelsForRepo({...context.repo})
 	const currentLabels = data.map(repoLabel => repoLabel.name)
-	const uniqueEntries: RepoLabel[] = config.reduce((acc, label) => {
+	const uniqueEntries: RepoLabel[] = config.sort().reduce((acc, label) => {
 		const labelName: string = emojify(label.name).trim()
-		if (acc.find(entry => entry.name === labelName)) {
+		if (acc.find(entry => entry.name == labelName)) {
 			return acc
 		}
 		acc.push({
