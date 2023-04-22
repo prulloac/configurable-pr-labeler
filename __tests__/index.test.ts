@@ -120,7 +120,7 @@ describe('run', () => {
 			owner: 'monalisa',
 			repo: 'helloworld',
 			issue_number: 123,
-			labels: ['JS/TS 😃']
+			labels: ['important ⚠️']
 		})
 	})
 })

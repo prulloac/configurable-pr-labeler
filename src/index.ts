@@ -52,10 +52,9 @@ async function syncLabels(client: ClientType, newLabels: ConditionalLabel[]) {
 			color: newLabel.color?.replace('#', '') || undefined,
 			description: newLabel.description || undefined
 		} as RepoLabel
-		if (newLabelsEntries.find(entry => entry.name === newLabelEntry.name)) {
-			continue
+		if (!newLabelsEntries.map(x => x.name).includes(newLabelEntry.name)) {
+			newLabelsEntries.push(newLabelEntry)
 		}
-		newLabelsEntries.push(newLabelEntry)
 	}
 	for (const newLabelEntry of newLabelsEntries) {
 		if (!currentLabels.includes(newLabelEntry.name)) {

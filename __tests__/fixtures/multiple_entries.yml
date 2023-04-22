@@ -1,7 +1,7 @@
 labels:
-  - name: "JS/TS 😃"
+  - name: "important ⚠️"
     conditions:
       - files: ["**/*.js"]
-  - name: "JS/TS 😃"
+  - name: "important ⚠️"
     conditions:
       - minFiles: 0
