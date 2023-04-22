@@ -3,7 +3,7 @@ import {context, getOctokit} from '@actions/github'
 import {PullRequest} from './pullRequest/PullRequest'
 import {ClientType, ConditionalLabel, RepoLabel} from './types'
 import {load as loadYaml} from 'js-yaml'
-import {unemojify} from 'node-emoji'
+import {emojify} from 'node-emoji'
 
 function parseConfigObject(configObject: any): ConditionalLabel[] {
 	if (!Object.keys(configObject).includes('labels')) {
@@ -23,7 +23,7 @@ function parseConfigObject(configObject: any): ConditionalLabel[] {
 	return config
 }
 
-async function fetchConfig(client: ClientType, configFilePath: string): Promise<ConditionalLabel[]> {
+async function fetchConfigLabels(client: ClientType, configFilePath: string): Promise<ConditionalLabel[]> {
 	const response: any = await client.rest.repos.getContent({
 		repo: context.repo.repo,
 		owner: context.repo.owner,
@@ -41,32 +41,32 @@ async function loadPullRequestData(client: ClientType): Promise<PullRequest> {
 	return pullRequest
 }
 
-async function syncLabels(client: ClientType, config: ConditionalLabel[]) {
+async function syncLabels(client: ClientType, newLabels: ConditionalLabel[]) {
 	const {data} = await client.rest.issues.listLabelsForRepo({...context.repo})
 	const currentLabels = data.map(repoLabel => repoLabel.name)
-	const uniqueEntries = new Set(
-		config.map(conditionalLabel => {
-			const labelName = unemojify(conditionalLabel.name)
-			return {
-				name: labelName,
-				color: conditionalLabel.color?.replace('#', '') || undefined,
-				description: conditionalLabel.description || undefined
-			} as RepoLabel
-		})
-	)
-	for (const label of uniqueEntries) {
-		if (currentLabels.includes(label.name)) {
-			continue
+	const newLabelsEntries: string[] = newLabels
+		.map(label => emojify(label.name).trim())
+		.reduce((acc, label) => {
+			if (!acc.includes(label)) {
+				acc.push(label)
+			}
+			return acc
+		}, new Array<string>())
+	for (const newLabelEntry of newLabelsEntries) {
+		if (!currentLabels.includes(newLabelEntry)) {
+			core.info(`creating label: ${newLabelEntry} with : ${JSON.stringify(newLabelEntry)}`)
+			await client.rest.issues.createLabel({...context.repo, name: newLabelEntry})
 		}
-		core.info(`creating label: ${label.name} with : ${JSON.stringify(label)}`)
-		await client.rest.issues.createLabel({...context.repo, ...label})
 	}
 }
 
 export async function run(): Promise<void> {
 	try {
 		const client: ClientType = getOctokit(core.getInput('token', {required: true}))
-		const config: ConditionalLabel[] = await fetchConfig(client, core.getInput('configuration_path', {required: false}))
+		const config: ConditionalLabel[] = await fetchConfigLabels(
+			client,
+			core.getInput('configuration_path', {required: false})
+		)
 		await syncLabels(client, config)
 		const pullRequest: PullRequest = await loadPullRequestData(client)
 		await pullRequest.apply(config)

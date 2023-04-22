@@ -1,61 +1,57 @@
 labels:
-  - name: "simple :thinking:"
-    color: "#F2C5E0"
+  - name: "simple 🤔"
     conditions:
-      - maxLines: 100
-  - name: "normal :thinking:"
-    color: "#EC8FD0"
+      - maxLines: 200
+  - name: "normal 🤔"
     conditions:
-      - minLines: 100
-      - maxLines: 500
-  - name: "complex :thinking:"
-    color: "#D43790"
+      - minLines: 200
+      - maxLines: 1000
+  - name: "complex 🤔"
     conditions:
-      - maxLines: 2000
-      - minLines: 500
-  - name: "headache :thinking:"
-    color: "#AE388B"
+      - minLines: 1000
+      - maxLines: 5000
+  - name: "headache 🤔"
     conditions:
-      - minLines: 2000
-  - name: "important ⚠️"
+      - minLines: 5000
+  - name: "important❗"
     conditions:
       - title: "/^hotfix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
       - minLines: 500
-  - name: "important ⚠️"
+  - name: "important❗"
     conditions:
       - body: "/#important/gmi"
-  - name: "wip :construction:"
+  - name: "wip 🚧"
     conditions:
       - body: "/#(wip|work in progress|work_in_progress|work-in-progress)/gmi"
-  - name: "feature :rocket:"
+  - name: "feature 🚀"
     conditions:
-      - title: "/^feat(ure)?\\/[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "fix :wrench:"
+      - title: "/^feat(ure)?(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
+  - name: "fix 🔧"
     conditions:
-      - title: "/^fix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "hotfix :fire_engine:"
+      - title: "/^fix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
+  - name: "hotfix 🚒"
     conditions:
-      - title: "/^hotfix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "poc :thought_balloon:"
+      - title: "/^hotfix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
+  - name: "poc 💭"
     conditions:
-      - title: "/^(poc|test)\\/[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "small :file_folder:"
+      - title: "/^(poc|test)(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
+  - name: "small 📁"
     conditions:
       - maxFiles: 10
-  - name: "medium :file_folder:"
+  - name: "medium 📁"
     conditions:
-      - maxFiles: 25
       - minFiles: 10
-  - name: "large :file_folder:"
+      - maxFiles: 25
+  - name: "large 📁"
     conditions:
-      - maxFiles: 50
       - minFiles: 25
-  - name: "titanic :file_folder:"
+      - maxFiles: 50
+  - name: "titanic 📁"
     conditions:
       - minFiles: 50
   - name: "JS/TS"
     conditions:
       - files: ["**/*.js", "**/*.ts"]
-  - name: "Ready! :white_check_mark:"
+  - name: "Ready! ✅"
     conditions:
       - mergeable: true

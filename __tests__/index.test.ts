@@ -15,6 +15,7 @@ const paginateMock = jest.spyOn(gh, 'paginate')
 const getPullMock = jest.spyOn(gh.rest.pulls, 'get')
 const listCommitsMock = jest.spyOn(gh.rest.pulls, 'listCommits')
 const listLabelsForRepoMock = jest.spyOn(gh.rest.issues, 'listLabelsForRepo')
+const createLabelMock = jest.spyOn(gh.rest.issues, 'createLabel')
 
 const yamlFixtures = (name: string) => fs.readFileSync(`__tests__/fixtures/${name}`, 'utf8')
 
@@ -103,6 +104,23 @@ describe('run', () => {
 			repo: 'helloworld',
 			issue_number: 123,
 			name: 'JS/TS'
+		})
+	})
+
+	it('multiple entries of the same label name are added only once', async () => {
+		usingLabelerConfigYaml('multiple_entries.yml')
+		mockGitHubResponseChangedFiles('foo.js')
+
+		await run()
+
+		expect(core.setFailed).toHaveBeenCalledTimes(0)
+		expect(createLabelMock).toHaveBeenCalledTimes(1)
+		expect(addLabelsMock).toHaveBeenCalledTimes(1)
+		expect(addLabelsMock).toHaveBeenCalledWith({
+			owner: 'monalisa',
+			repo: 'helloworld',
+			issue_number: 123,
+			labels: ['important ⚠️']
 		})
 	})
 })
