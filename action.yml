@@ -1,6 +1,9 @@
-name: 'PR Labeler'
+name: 'Configurable Pull Request Labeler'
 description: 'Labels a pull request based on amount of lines changed and pull request body metadata.'
 author: 'prulloac'
+branding:
+  icon: bookmark
+  color: blue
 inputs:
   token:
     required: true
