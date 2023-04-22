@@ -46,7 +46,7 @@ async function syncLabels(client: ClientType, config: ConditionalLabel[]) {
 	const currentLabels = data.map(repoLabel => repoLabel.name)
 	const uniqueEntries = new Set(
 		config.map(conditionalLabel => {
-			const labelName = unemojify(conditionalLabel.name)
+			const labelName: string = unemojify(conditionalLabel.name).trim()
 			return {
 				name: labelName,
 				color: conditionalLabel.color?.replace('#', '') || undefined,
