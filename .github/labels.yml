@@ -2,21 +2,21 @@ labels:
   - name: "simple :thinking:"
     color: "#F2C5E0"
     conditions:
-      - maxLines: 40
+      - maxLines: 100
   - name: "normal :thinking:"
     color: "#EC8FD0"
     conditions:
-      - minLines: 40
-      - maxLines: 200
+      - minLines: 100
+      - maxLines: 500
   - name: "complex :thinking:"
     color: "#D43790"
     conditions:
-      - maxLines: 1000
-      - minLines: 200
+      - maxLines: 2000
+      - minLines: 500
   - name: "headache :thinking:"
     color: "#AE388B"
     conditions:
-      - minLines: 1000
+      - minLines: 2000
   - name: "important ⚠️"
     conditions:
       - title: "/^hotfix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
