@@ -17,11 +17,11 @@ labels:
     color: "#AE388B"
     conditions:
       - minLines: 5000
-  - name: "important ⚠️"
+  - name: "important❗"
     conditions:
       - title: "/^hotfix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
       - minLines: 500
-  - name: "important ⚠️"
+  - name: "important❗"
     conditions:
       - body: "/#important/gmi"
   - name: "wip 🚧"
