@@ -44,16 +44,18 @@ async function loadPullRequestData(client: ClientType): Promise<PullRequest> {
 async function syncLabels(client: ClientType, config: ConditionalLabel[]) {
 	const {data} = await client.rest.issues.listLabelsForRepo({...context.repo})
 	const currentLabels = data.map(repoLabel => repoLabel.name)
-	const uniqueEntries = new Set(
-		config.map(conditionalLabel => {
-			const labelName: string = unemojify(conditionalLabel.name).trim()
-			return {
-				name: labelName,
-				color: conditionalLabel.color?.replace('#', '') || undefined,
-				description: conditionalLabel.description || undefined
-			} as RepoLabel
-		})
-	)
+	const uniqueEntries: RepoLabel[] = config.reduce((acc, label) => {
+		const labelName: string = unemojify(label.name).trim()
+		if (acc.find(entry => entry.name === labelName)) {
+			return acc
+		}
+		acc.push({
+			name: labelName,
+			color: label.color?.replace('#', '') || undefined,
+			description: label.description || undefined
+		} as RepoLabel)
+		return acc
+	}, [] as RepoLabel[])
 	for (const label of uniqueEntries) {
 		if (currentLabels.includes(label.name)) {
 			continue
