@@ -1,4 +1,4 @@
-name: 'build-test'
+name: 'PR Labeler'
 on: # rebuild any PRs and main branch changes
   pull_request:
     types:
@@ -12,6 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./
+      - uses: prulloac/pr-labeler@main
         with:
           token: ${{secrets.GITHUB_TOKEN}}

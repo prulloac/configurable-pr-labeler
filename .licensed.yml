@@ -12,3 +12,7 @@ allowed:
 
 reviewed:
   npm:
+  - "@actions/http-client"
+  - argparse
+  - lodash
+  - node-emoji
