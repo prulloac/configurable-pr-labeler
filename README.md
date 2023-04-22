@@ -1,4 +1,4 @@
-# PR Labeler
+# Configurable Pull Request Labeler
 
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/prulloac/pr-labeler)
 ![GitHub contributors](https://img.shields.io/github/contributors/prulloac/pr-labeler)
