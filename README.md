@@ -1,5 +1,11 @@
 # PR Labeler
 
+![GitHub package.json version](https://img.shields.io/github/package-json/v/prulloac/pr-labeler)
+![GitHub contributors](https://img.shields.io/github/contributors/prulloac/pr-labeler)
+![GitHub Sponsors](https://img.shields.io/github/sponsors/prulloac)
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f16c082fc1e84aacb24a89a1d2b8a17e)](https://app.codacy.com/gh/prulloac/pr-labeler/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=prulloac_pr-labeler&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=prulloac_pr-labeler)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=prulloac_pr-labeler&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=prulloac_pr-labeler)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=prulloac_pr-labeler&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=prulloac_pr-labeler)
