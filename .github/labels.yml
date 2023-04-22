@@ -25,7 +25,7 @@ labels:
       - body: "/#(wip|work in progress|work_in_progress|work-in-progress)/gmi"
   - name: "feature 🚀"
     conditions:
-      - title: "/^feat(ure)?\\/[a-z0-9\\-_ &#$@!?%]+$/i"
+      - title: "/^feat(ure)?\\(/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "fix 🔧"
     conditions:
       - title: "/^fix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
