@@ -9,6 +9,11 @@ on: # rebuild any PRs and main branch changes
 
 jobs:
   label: # name of the job. Jobs run in parallel unless specified otherwise.
+    name: "Label PR"
+    permissions:
+      pull-requests: write
+      issues: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
