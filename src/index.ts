@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 import {PullRequest} from './pullRequest/PullRequest'
-import {ClientType, ConditionalLabel, RepoLabel} from './types'
+import {ClientType, ConditionalLabel} from './types'
 import {load as loadYaml} from 'js-yaml'
 import {emojify} from 'node-emoji'
 
