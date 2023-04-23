@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: prulloac/pr-labeler@v1.0.0
+      - uses: prulloac/configurable-pr-labeler@v1
         with:
           token: ${{secrets.GITHUB_TOKEN}}
 
