@@ -49,7 +49,18 @@
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "zsh",
 				"terminal.integrated.defaultProfile.windows": "zsh"
-			}
+			},
+			"extensions": [
+				"github.vscode-github-actions",
+				"GitHub.copilot",
+				"bierner.github-markdown-preview",
+				"GitHub.vscode-pull-request-github",
+				"eamodio.gitlens",
+				"ms-vscode.vscode-typescript-next",
+				"Orta.vscode-jest",
+				"christian-kohler.npm-intellisense",
+				"ms-azuretools.vscode-docker"
+			]
 		}
 	}
 

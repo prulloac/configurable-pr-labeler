@@ -12,6 +12,7 @@ export class PullRequest {
 	number!: number
 	title!: string
 	body!: string
+	branch!: string
 	filesChanged: FilesChanged = {quantity: 0, files: []}
 	labels!: string[]
 	linesChanged!: number
@@ -33,6 +34,7 @@ export class PullRequest {
 			...context.repo,
 			pull_number: this.number
 		})
+		this.branch = `${metaData.head?.ref}`
 		this.body = `${metaData.body}`
 		this.title = metaData.title
 		this.linesChanged = metaData.additions + metaData.deletions
@@ -112,6 +114,10 @@ export class PullRequest {
 		if (condition.rebaseable) {
 			info(`checking if pr is rebaseable: ${condition.rebaseable}`)
 			return this.rebaseable === condition.rebaseable
+		}
+		if (condition.branch) {
+			info(`checking if branch matches: ${condition.branch}`)
+			return this.regexMatch(this.branch, condition.branch)
 		}
 		return false
 	}

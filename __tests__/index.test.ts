@@ -42,8 +42,39 @@ describe('run', () => {
 		})
 	})
 
-	it('adds labels to PRs that match our title and body', async () => {
+	it('adds labels to PRs that match our pr title and body and branch name', async () => {
 		usingLabelerConfigYaml('body_and_title.yml')
+		mockGitHubResponseChangedFiles('foo.js')
+
+		await run()
+
+		expect(core.setFailed).toHaveBeenCalledTimes(0)
+		expect(listLabelsForRepoMock).toHaveBeenCalledTimes(1)
+		expect(getPullMock).toHaveBeenCalledTimes(1)
+		expect(removeLabelMock).toHaveBeenCalledTimes(0)
+		expect(addLabelsMock).toHaveBeenCalledTimes(3)
+		expect(addLabelsMock).toHaveBeenNthCalledWith(1, {
+			owner: 'monalisa',
+			repo: 'helloworld',
+			issue_number: 123,
+			labels: ['title label']
+		})
+		expect(addLabelsMock).toHaveBeenNthCalledWith(2, {
+			owner: 'monalisa',
+			repo: 'helloworld',
+			issue_number: 123,
+			labels: ['body label']
+		})
+		expect(addLabelsMock).toHaveBeenNthCalledWith(3, {
+			owner: 'monalisa',
+			repo: 'helloworld',
+			issue_number: 123,
+			labels: ['branch label']
+		})
+	})
+
+	it('adds labels to PRs that match the amount of changes introduced', async () => {
+		usingLabelerConfigYaml('lines_files.yml')
 		mockGitHubResponseChangedFiles('foo.js')
 
 		await run()
@@ -57,13 +88,13 @@ describe('run', () => {
 			owner: 'monalisa',
 			repo: 'helloworld',
 			issue_number: 123,
-			labels: ['title label']
+			labels: ['lines label']
 		})
 		expect(addLabelsMock).toHaveBeenNthCalledWith(2, {
 			owner: 'monalisa',
 			repo: 'helloworld',
 			issue_number: 123,
-			labels: ['body label']
+			labels: ['files label']
 		})
 	})
 
@@ -140,10 +171,13 @@ function mockGitHubResponseChangedFiles(...files: string[]): void {
 			body: 'bar',
 			additions: 10,
 			deletions: 0,
-			changed_files: 1,
+			changed_files: files.length,
 			mergeable: true,
 			rebaseable: true,
-			labels: []
+			labels: [],
+			head: {
+				ref: 'baz'
+			}
 		}
 	})
 	paginateMock.mockReturnValue(<any>returnValue)

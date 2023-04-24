@@ -5,3 +5,6 @@ labels:
   - name: "body label"
     conditions:
       - body: "bar"
+  - name: "branch label"
+    conditions:
+      - branch: "baz"
