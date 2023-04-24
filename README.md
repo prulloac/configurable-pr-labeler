@@ -71,15 +71,27 @@ labels:
   - name: "feature 🚀"
     conditions:
       - title: "/^feat(ure)?(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
+  - name: "feature 🚀"
+    conditions:
+      - branch: "/^feat(ure)?(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "fix 🔧"
     conditions:
       - title: "/^fix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
+  - name: "fix 🔧"
+    conditions:
+      - branch: "/^fix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "hotfix 🚒"
     conditions:
       - title: "/^hotfix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
+  - name: "hotfix 🚒"
+    conditions:
+      - branch: "/^hotfix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "poc 💭"
     conditions:
       - title: "/^(poc|test)(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
+  - name: "poc 💭"
+    conditions:
+      - branch: "/^(poc|test)(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
   - name: "small 📁"
     conditions:
       - maxFiles: 10

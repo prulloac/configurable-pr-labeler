@@ -48,7 +48,9 @@
 		"vscode": {
 			"settings": {
 				"terminal.integrated.defaultProfile.linux": "zsh",
-				"terminal.integrated.defaultProfile.windows": "zsh"
+				"terminal.integrated.defaultProfile.windows": "zsh",
+				"eslint.alwaysShowStatus": true,
+				"jest.rootPath": "./"
 			},
 			"extensions": [
 				"github.vscode-github-actions",
