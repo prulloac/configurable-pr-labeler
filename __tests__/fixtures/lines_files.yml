@@ -1,0 +1,9 @@
+labels:
+  - name: "lines label"
+    conditions:
+      - minLines: 1
+      - maxLines: 200
+  - name: "files label"
+    conditions:
+      - minFiles: 1
+      - maxFiles: 10
