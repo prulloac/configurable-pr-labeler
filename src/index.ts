@@ -42,7 +42,7 @@ async function loadPullRequestData(client: ClientType): Promise<PullRequest> {
 
 async function syncLabels(client: ClientType, newLabels: ConditionalLabel[]) {
 	const {data} = await client.rest.issues.listLabelsForRepo({...context.repo})
-	const currentLabels = data.map(repoLabel => repoLabel.name)
+	const currentLabels = data.map(repoLabel => repoLabel.name.trim())
 	const newLabelsEntries: string[] = newLabels
 		.map(label => label.name.trim())
 		.reduce((acc, label) => {
