@@ -52,7 +52,7 @@ async function syncLabels(client: ClientType, newLabels: ConditionalLabel[]) {
 			return acc
 		}, new Array<string>())
 	for (const newLabelEntry of newLabelsEntries) {
-		if (!currentLabels.includes(newLabelEntry)) {
+		if (!currentLabels.some(repoLabel => repoLabel.trim() === newLabelEntry.trim())) {
 			core.info(`creating label: ${newLabelEntry} with : ${JSON.stringify(newLabelEntry)}`)
 			await client.rest.issues.createLabel({...context.repo, name: newLabelEntry})
 		}
