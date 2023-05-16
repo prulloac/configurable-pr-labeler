@@ -28,20 +28,16 @@
 			"version": "latest"
 		}
 	},
-
 	"containerEnv": {
-		"GIT_DEFAULT_BRANCH": "${localEnv:GIT_DEFAULT_BRANCH:main}",
 		"GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
-		"GIT_USER_EMAIL": "${localEnv:GIT_USER_EMAIL}",
-		"GIT_USER_NAME": "${localEnv:GIT_USER_NAME}"
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "bash ./.devcontainer/warmup.sh",
-	"postStartCommand": "zsh",
+	// "postCreateCommand": "",
+	// "postStartCommand": "",
 
 	// Configure tool-specific properties.
 	"customizations": {
