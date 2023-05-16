@@ -3,7 +3,6 @@ import {context, getOctokit} from '@actions/github'
 import {PullRequest} from './pullRequest/PullRequest'
 import {ClientType, ConditionalLabel} from './types'
 import {load as loadYaml} from 'js-yaml'
-import {emojify} from 'node-emoji'
 
 function parseConfigObject(configObject: any): ConditionalLabel[] {
 	if (!Object.keys(configObject).includes('labels')) {
@@ -45,7 +44,7 @@ async function syncLabels(client: ClientType, newLabels: ConditionalLabel[]) {
 	const {data} = await client.rest.issues.listLabelsForRepo({...context.repo})
 	const currentLabels = data.map(repoLabel => repoLabel.name)
 	const newLabelsEntries: string[] = newLabels
-		.map(label => emojify(label.name).trim())
+		.map(label => label.name.trim())
 		.reduce((acc, label) => {
 			if (!acc.includes(label)) {
 				acc.push(label)
