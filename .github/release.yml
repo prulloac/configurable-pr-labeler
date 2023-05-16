@@ -1,0 +1,33 @@
+changelog:
+  exclude:
+    labels:
+      - invalid
+  categories:
+    - title: "Breaking Changes 💥"
+      labels:
+        - breaking
+    - title: "New Features 🚀"
+      labels:
+        - feature
+        - enhancement
+    - title: "Bug Fixes 🦗"
+      labels:
+        - bug
+    - title: "Documentation 📚"
+      labels:
+        - documentation
+    - title: "Improvements 🛠️"
+      labels:
+        - improvement
+        - refactor
+        - performance
+        - dependencies
+    - title: "Security 🔒"
+      labels:
+        - security
+    - title: "Deprecations 💀"
+      labels:
+        - deprecation
+    - title: "Removals 🗑️"
+      labels:
+        - removal

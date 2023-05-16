@@ -1,69 +1,66 @@
 labels:
-  - name: "simple 🤔"
+  - name: "simple"
     conditions:
       - maxLines: 200
-  - name: "normal 🤔"
+  - name: "normal"
     conditions:
       - minLines: 200
       - maxLines: 1000
-  - name: "complex 🤔"
+  - name: "complex"
     conditions:
       - minLines: 1000
       - maxLines: 5000
-  - name: "headache 🤔"
+  - name: "headache"
     conditions:
       - minLines: 5000
-  - name: "important❗"
+  - name: "important"
     conditions:
       - title: "/^hotfix\\/[a-z0-9\\-_ &#$@!?%]+$/i"
       - minLines: 500
-  - name: "important❗"
+  - name: "important"
     conditions:
       - body: "/#important/gmi"
-  - name: "wip 🚧"
+  - name: "wip"
     conditions:
       - body: "/#(wip|work in progress|work_in_progress|work-in-progress)/gmi"
-  - name: "feature 🚀"
+  - name: "feature"
     conditions:
       - title: "/^feat(ure)?(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "feature 🚀"
+  - name: "feature"
     conditions:
       - branch: "/^feat(ure)?(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "fix 🔧"
+  - name: "fix"
     conditions:
       - title: "/^fix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "fix 🔧"
+  - name: "fix"
     conditions:
       - branch: "/^fix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "hotfix 🚒"
+  - name: "hotfix"
     conditions:
       - title: "/^hotfix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "hotfix 🚒"
+  - name: "hotfix"
     conditions:
       - branch: "/^hotfix(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "poc 💭"
+  - name: "poc"
     conditions:
       - title: "/^(poc|test)(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "poc 💭"
+  - name: "poc"
     conditions:
       - branch: "/^(poc|test)(\\/|:)[a-z0-9\\-_ &#$@!?%]+$/i"
-  - name: "small 📁"
+  - name: "small"
     conditions:
       - maxFiles: 10
-  - name: "medium 📁"
+  - name: "medium"
     conditions:
       - minFiles: 10
       - maxFiles: 25
-  - name: "large 📁"
+  - name: "large"
     conditions:
       - minFiles: 25
       - maxFiles: 50
-  - name: "titanic 📁"
+  - name: "titanic"
     conditions:
       - minFiles: 50
-  - name: "JS/TS"
-    conditions:
-      - files: ["**/*.js", "**/*.ts"]
-  - name: "Ready! ✅"
+  - name: "Ready!"
     conditions:
       - mergeable: true
