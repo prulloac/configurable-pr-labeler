@@ -3,7 +3,6 @@ import {context, getOctokit} from '@actions/github'
 import {PullRequest} from './pullRequest/PullRequest'
 import {ClientType, ConditionalLabel} from './types'
 import {load as loadYaml} from 'js-yaml'
-import {emojify} from 'node-emoji'
 
 function parseConfigObject(configObject: any): ConditionalLabel[] {
 	if (!Object.keys(configObject).includes('labels')) {
@@ -42,10 +41,10 @@ async function loadPullRequestData(client: ClientType): Promise<PullRequest> {
 }
 
 async function syncLabels(client: ClientType, newLabels: ConditionalLabel[]) {
-	const {data} = await client.rest.issues.listLabelsForRepo({...context.repo})
-	const currentLabels = data.map(repoLabel => repoLabel.name)
+	const {data} = await client.rest.issues.listLabelsForRepo({...context.repo, per_page: 100})
+	const currentLabels = data.map(repoLabel => repoLabel.name.trim())
 	const newLabelsEntries: string[] = newLabels
-		.map(label => emojify(label.name).trim())
+		.map(label => label.name.trim())
 		.reduce((acc, label) => {
 			if (!acc.includes(label)) {
 				acc.push(label)
@@ -53,7 +52,7 @@ async function syncLabels(client: ClientType, newLabels: ConditionalLabel[]) {
 			return acc
 		}, new Array<string>())
 	for (const newLabelEntry of newLabelsEntries) {
-		if (!currentLabels.includes(newLabelEntry)) {
+		if (!currentLabels.some(repoLabel => repoLabel.trim() === newLabelEntry.trim())) {
 			core.info(`creating label: ${newLabelEntry} with : ${JSON.stringify(newLabelEntry)}`)
 			await client.rest.issues.createLabel({...context.repo, name: newLabelEntry})
 		}
