@@ -1,14 +1,15 @@
 name: 'Auto Merger'
 
 on:
-  status    
+  schedule:
+    - cron: '2 * * * *'
 jobs:
   if_status_passed_and_dependabot:
   # this action approves the pull request when status passed and the author is dependabot
     runs-on: ubuntu-latest
     steps:
-      - run: |
-            if [ "dependabot[bot]" == $(gh api repos/:owner/:repo/pulls/:pull_number --jq '.user.login')] ; then
-                gh pr merge ${{github.event.pull_request.number}} --auto -s
-            fi
-            exit 1
+      - run: export OWNER=$(gh repo view --json owner --jq '.owner.login')
+      - run: export REPO=$(gh repo view --json name --jq '.name')
+      - run: echo "$OWNER and $REPO"
+        #gh api repos/prulloac/configurable-pr-labeler/pulls --jq '.[] | select(.head.ref | contains("dependabot")) | .number'
+#      - run: gh api repos/$()/$()/pulls --jq '.[] | select(.head.ref | contains("dependabot")) | .number' > prs.txt
