@@ -1,14 +1,14 @@
-on:
-  status
+name: 'Auto Merger'
 
+on:
+  status    
 jobs:
   if_status_passed_and_dependabot:
   # this action approves the pull request when status passed and the author is dependabot
     runs-on: ubuntu-latest
-    if: >-
-        github.event.state == 'success'
     steps:
       - run: |
             if [ "dependabot[bot]" == $(gh api repos/:owner/:repo/pulls/:pull_number --jq '.user.login')] ; then
                 gh pr merge ${{github.event.pull_request.number}} --auto -s
             fi
+            exit 1
