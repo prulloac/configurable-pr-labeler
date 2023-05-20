@@ -2,7 +2,7 @@ name: 'Auto Merger'
 
 on:
   schedule:
-    - cron: '2 * * * *'
+    - cron: '* * * * *'
 jobs:
   if_status_passed_and_dependabot:
   # this action approves the pull request when status passed and the author is dependabot
