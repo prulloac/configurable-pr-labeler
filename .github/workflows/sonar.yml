@@ -5,6 +5,10 @@ on:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - 'src/**'
+      - 'test/**'
+      - 'sonar-project.properties'
   workflow_dispatch:
 
 jobs:
